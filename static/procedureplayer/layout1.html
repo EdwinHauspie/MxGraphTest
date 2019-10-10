@@ -1,0 +1,33 @@
+<div class="ppscope" style="margin: 10px;">
+    <style>
+        .ppscope button {background-color: #ffce43;border-radius: 3px;border: 2px solid #000;display: inline-block;cursor: pointer;color: #333;font-weight: bold;padding: 6px 24px;text-decoration: none;}
+        .ppscope button:hover { position:relative; top:-1px; }
+        .ppscope button:active { position:relative; top:0px;}
+        .ppscope h1 { margin:0 0 10px 0; border-bottom: 2px solid #000; }
+        .ppscope h3 { margin:0; }
+        .ppscope p { margin:0; padding: 0; }
+        .ppscope * + p { margin-top: 10px; }
+        .ppscope .edges { display:flex; text-align: center; margin-top:10px;border-top: 2px solid #000;padding-top: 10px; }
+        .ppscope .edges div { flex: 1; }
+        .ppscope .contents { flex:1; }
+        .ppscope ul { margin:0 20px 0 0;padding: 0;display: inline-block; list-style: none; }
+        .ppscope ul li { position: relative; }
+        .ppscope ul li a { color: black; }
+        .ppscope ul li.trans { opacity: .2 }
+        .ppscope ul li.node { border: 1.5px solid #6489ab; width: 130px; height: 70px; border-radius: 10px; padding: 5px; background: #c0d3e4; overflow: hidden; }
+        .ppscope ul li.step { font-size: 40px;margin: -17px 0 -19px 0;padding-left: 40%; }
+        .ppscope ul li.step em { font-size: 15px;position: absolute;top: 18px;left: 60%; }
+        .ppscope ul li:first-child { margin:0; border-radius: 3px; background: #ffce43; border-color: #000; height: auto; }
+    </style>
+
+    <h1 class="title"></h1>
+
+    <div style="flex:1;display:flex;">
+        <div class="breadcrumb"></div>
+
+        <div style="flex:1;display:flex;flex-direction:column;">
+            <div class="contents"></div>
+            <div class="edges"></div>
+        </div>
+    </div>
+</div>
