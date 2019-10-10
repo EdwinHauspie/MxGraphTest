@@ -82,7 +82,7 @@ window.onload = () => {
                 title: x.value,
                 edges: edgeCells.map(attributesToObject).filter(y => y.source == x.id).map(y => ({ title: y.value, target: y.target }))
             }));
-        document.getElementById('json').innerHTML = JSON.stringify(nodes, null, '   ');;
+        document.getElementById('json').value = JSON.stringify(nodes, null, '   ');;
     };
 
     document.getElementById('arrange').onclick = function () {
@@ -92,28 +92,49 @@ window.onload = () => {
     };
 
     document.getElementById('fromJson').onclick = function () {
-        alert(123)
+        var obj = JSON.parse(document.getElementById('json').value);
+
+
+        graph.getModel().beginUpdate();
+        //graph.model.clear();
+
+        try {
+            var vertices = {};
+
+            obj.forEach(n => {
+                var g = graph.insertVertex(parent, null, n.title, 0, 0, defaultSize.w, defaultSize.h);
+                vertices[n.id] = g;
+            });
+
+            obj.forEach(n => {
+                (n.edges||[]).forEach(e => {
+                     graph.insertEdge(parent, null, e.title, vertices[n.id], vertices[e.target]);
+                });
+            });
+        }
+        finally {
+            graph.getModel().endUpdate();
+            var layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_NORTH);
+            var selectionCells = graph.getSelectionCells();
+            layout.execute(graph.getDefaultParent(), selectionCells.length == 0 ? null : selectionCells);
+        }
     };
 
     function addOverlays(graph, cell) {
-        var overlay = new mxCellOverlay(new mxImage('/static/mxClient/resources/add.png', 24, 24), 'Add child');
+        var overlay = new mxCellOverlay(new mxImage('/static/mxClient/resources/add.png', 16, 16), 'Nieuwe stap');
         overlay.cursor = 'hand';
-        overlay.align = mxConstants.ALIGN_CENTER;
-        overlay.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) {
-            addChild(graph, cell);
-        }));
-
+        overlay.align = mxConstants.ALIGN_RIGHT;
+        overlay.offset = new mxPoint(-10, -10);
+        console.log(overlay);
+        overlay.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { addChild(graph, cell); }));
         graph.addCellOverlay(cell, overlay);
 
-        overlay = new mxCellOverlay(new mxImage('/static/mxClient/resources/close.png', 30, 30), 'Delete');
+        overlay = new mxCellOverlay(new mxImage('/static/mxClient/resources/delete.png', 16, 16), 'Verwijderen');
         overlay.cursor = 'hand';
-        overlay.offset = new mxPoint(-4, 8);
+        overlay.offset = new mxPoint(-10, 10);
         overlay.align = mxConstants.ALIGN_RIGHT;
         overlay.verticalAlign = mxConstants.ALIGN_TOP;
-        overlay.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) {
-            deleteSubtree(graph, cell);
-        }));
-
+        overlay.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { deleteSubtree(graph, cell); }));
         graph.addCellOverlay(cell, overlay);
     };
 
