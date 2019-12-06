@@ -30,41 +30,41 @@ let ProcedurePlayer = (function () {
                     return;
                 }
 
-                if (pointer) {
+                /*if (pointer) {
                     breadCrumb[pointer].data = [...this.el.querySelectorAll('[name]')]
                         .map(x => ({ k: x.getAttribute('name'), v: x.value }))
                         .reduce((agg, x) => { agg[x.k] = x.v; return agg; }, {});
-                }
+                }*/
 
                 let node = P.nodes.filter(x => x.id == id)[0];
 
-                if (!breadCrumb.includes(node)) {
-                    if (pointer < breadCrumb.length - 1) {
-                        if (!confirm('Weet je het zeker?')) return;
-                        breadCrumb = breadCrumb.slice(0, pointer + 1);
-                    }
-                    breadCrumb.push(node);
-                }
+                //if (!breadCrumb.includes(node)) {
+                    //if (pointer < breadCrumb.length - 1) {
+                        //if (!confirm('Weet je het zeker?')) return;
+                        //breadCrumb = breadCrumb.slice(0, pointer + 1);
+                    //}
+                    breadCrumb.push(node.id);
+                //}
 
-                let edgesHtml = arrayToHtml(node.edges, x => `<div><button class="goto${x.target}">${x.title}</button>${x.contents || ''}</div>`);
-                setHtml('.contents', `<h3>${node.title}</h3>${node.contents}`);
+                let edgesHtml = arrayToHtml(node.edges, x => `<div><button class="goto${x.target}">${x.title || 'Volgende'}</button>${x.contents || ''}</div>`);
+                setHtml('.contents', `<h3>${node.title}</h3>${node.contents || ''}`);
 
-                if (node.data) {
+                /*if (node.data) {
                     [...this.el.querySelectorAll('[name]')].forEach(x => {
                         x.value = node.data[x.getAttribute('name')];
                     });
-                }
+                }*/
 
                 setHtml('.edges', edgesHtml || '<b>Einde</b>');
 
-                pointer = breadCrumb.indexOf(node);
+                //pointer = breadCrumb.indexOf(node);
 
                 let crumbHtml = `<ul>
                     <li class="node"><a href="#" class="goto0">${P.title}</a></li>
                     <li class="step">🡓</li>
-                    ${breadCrumb.reduce((agg, x, i) => agg += `
-                        <li class="node ${i > pointer ? 'trans' : ''}"><a href="#" class="goto${x.id}">${x.title}</a></li>
-                        ${breadCrumb[i + 1] ? `<li class="step ${i >= pointer ? 'trans' : ''}">🡓 <em>${x.edges.filter(y => y.target == breadCrumb[i + 1].id)[0].title}</em></li>` : ''}`, '')}
+                    ${breadCrumb.map(x => P.nodes.filter(y => y.id == x)[0]).reduce((agg, x, i) => agg += `
+                        <li class="node"><!--a href="#" class="goto${x.id}"-->${x.title}<!--/a--></li>
+                        ${breadCrumb[i + 1] ? `<li class="step">🡓 <em>${x.edges.filter(y => y.target == breadCrumb[i + 1])[0].title}</em></li>` : ''}`, '')}
                 </ul>`;
                 setHtml('.breadcrumb', crumbHtml);
             };
@@ -72,15 +72,15 @@ let ProcedurePlayer = (function () {
             const setHtml = (sel, html) => (sel ? this.el.querySelector(sel) : this.el).innerHTML = html;
             const getEntryNode = () => {
                 let targets = P.nodes.reduce(function (agg, x) { return agg.concat((x.edges || []).map(y => y.target)); }, []);
-                return P.nodes.filter(x => !targets.includes(x.id))[0];
+                return P.nodes.filter(x => x.id == 2)/*!targets.includes(x.id))*/[0];
             };
             navigateToNode(0);
         }
     }
 
     //Private methods
-    const getJson = async name => await fetch(`/static/procedureplayer/${name}`).then(r => r.json());
-    const getText = async name => await fetch(`/static/procedureplayer/${name}`).then(r => r.text());
+    const getJson = async name => await fetch(`static/procedureplayer/${name}`).then(r => r.json());
+    const getText = async name => await fetch(`static/procedureplayer/${name}`).then(r => r.text());
     const arrayToHtml = (arr, func) => (arr || []).reduce((agg, x) => (agg += func(x)), '');
 
     return ProcedurePlayer;

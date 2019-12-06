@@ -9,11 +9,13 @@
             "contents": "<p><img src='https://www.staatsbosbeheer.nl/-/media/08-dossiers/bos-en-hout/bos-en-hout-herfstbos.jpg' style='width: 300px;float: right;margin-left: 10px;' />Cursus turpis massa tincidunt dui ut ornare. Sociis natoque penatibus et magnis. Sodales ut etiam sit amet nisl purus in. Aliquet porttitor lacus luctus accumsan tortor posuere ac ut. Ut etiam sit amet nisl purus in. Sodales neque sodales ut etiam sit amet nisl purus in. Tellus molestie nunc non blandit massa enim. Dui id ornare arcu odio. Magna etiam tempor orci eu lobortis elementum nibh tellus molestie. Condimentum id venenatis a condimentum vitae. At elementum eu facilisis sed odio morbi quis. Tellus in hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Lacus viverra vitae congue eu consequat. Non sodales neque sodales ut. Egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam. Purus in massa tempor nec feugiat nisl pretium fusce. Feugiat scelerisque varius morbi enim nunc faucibus. Lacinia at quis risus sed vulputate. Congue nisi vitae suscipit tellus.</p>",
             "edges": [
                 {
+                    "id": 2,
                     "title": "Ja",
                     "contents": "<p><img src=\"https://media.tenor.com/images/15544c478d8847e25509b0ce3083663b/tenor.gif\" width='80px' /><img src=\"https://media.tenor.com/images/15544c478d8847e25509b0ce3083663b/tenor.gif\" width='80px' /><img src=\"https://media.tenor.com/images/15544c478d8847e25509b0ce3083663b/tenor.gif\" width='80px' /></p>",
                     "target": 5
                 },
                 {
+                    "id": 3,
                     "title": "Neen",
                     "contents": "<p>Venenatis a <a href='http://www.google.be' target='_blank'>condimentum vitae</a> sapien pellentesque habitant <b color='red'>morbi tristique senectus</b>. Amet nisl purus in mollis nunc sed id.</p>",
                     "target": 4
@@ -32,6 +34,7 @@
             "contents": "<p>Een MER wordt opgesteld onder de <a href='http://www.google.be' target='_blank'>verantwoordelijkheid</a> en op kosten van de initiatiefnemer.<br><input name='firstName' /><br><input name='lastName' /><br><input name='address' /><br> Hij moet daarvoor beroep doen op een team van erkende MER-deskundigen, gecoördineerd door een MER-coördinator.</p><p>Decreet 5 april 1995 <b>houdende algemene bepalingen inzake milieubeleid</b>, B.S. 3 juni 1995; Titel IV.</p>",
             "edges": [
                 {
+                    "id": 7,
                     "title": "Volgende",
                     "contents": "<p>A process flow diagram (PFD) is a diagram commonly used in chemical and process engineering to indicate the general flow of plant processes and equipment. The PFD displays the relationship between major equipment of a plant facility and does not show minor details such as piping details and designations.</p>",
                     "target": 6

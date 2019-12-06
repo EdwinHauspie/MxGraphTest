@@ -111,15 +111,11 @@ img.mxToolbarModeSelected {
 	border-style: inset;
 }
 div.mxTooltip {
-	-webkit-box-shadow: 3px 3px 12px #C0C0C0;
-	-moz-box-shadow: 3px 3px 12px #C0C0C0;
-	box-shadow: 3px 3px 12px #C0C0C0;
 	background: #FFFFCC;
 	border-style: solid;
 	border-width: 1px;
 	border-color: black;
-	font-family: Arial;
-	font-size: 8pt;
+	font-size: 10pt;
 	position: absolute;
 	cursor: default;
 	padding: 4px;
