@@ -9,9 +9,10 @@
 
     <style>
         body {
-            padding: 10px;
+            padding: 5px;
             margin: 0;
             font-family: sans-serif;
+            font-size: 14px;
         }
 
         #drawing {
@@ -22,10 +23,17 @@
             background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2UwZTBlMCIgb3BhY2l0eT0iMC4yIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=")
         }
 
-        #drawing image { opacity: 0.1; transition: all .35s; }
-        #drawing image:hover { opacity: 1; }
+        #drawing image {
+            opacity: 0.1;
+            transition: all .35s;
+        }
 
-        #json, #xml {
+        #drawing image:hover {
+            opacity: 1;
+        }
+
+        #json,
+        #xml {
             overflow-y: auto;
             font-family: monospace;
             padding: 10px;
@@ -35,18 +43,27 @@
             height: 100%;
             width: 100%;
             border: 2px solid #e6e6e6;
-            border-right:0;
+            border-right: 0;
+        }
+
+        textarea {
             resize: none;
         }
 
+        [contentEditable] {
+            border: 1px solid darkgrey;
+            min-height: 150px;
+            padding: 5px;
+        }
+
         button {
-            background: #fff;
+            background: #d4e2ff;
             padding: 6px 12px;
             cursor: pointer;
             border: 0px solid #e6e6e6;
             display: block;
             margin-bottom: 15px;
-            width: 120px;
+            width: 100px;
             box-shadow: 1px 1px 0px 2px #333;
         }
 
@@ -57,57 +74,98 @@
         }
 
         .luik {
-            flex: .2;
             position: relative;
             transition: .3s all;
+        }
+
+        .form-row+.form-row {
+            margin-top: 20px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            font-family: sans-serif;
+            font-size: 14px;
+            padding: 5px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 
 <body>
     <div style="display: flex;height: 100%;">
-        <div class="luik">
+        <div class="luik" style="flex:1;">
             <textarea id="json" placeholder="JSON"></textarea>
 
             <div style="position:absolute;right:20px;top:20px;">
                 <button class="enlarge">Enlarge</button>
-                <button id="load">Load Procedure</button>
-                <button id="save">Save Procedure</button>
+
+                <button id="loadJson" style="margin-top: 50px;">Load</button>
+                <button id="saveJson">Save</button>
             </div>
         </div>
 
-        <div class="luik">
+        <div class="luik" style="flex:1;">
             <textarea id="xml" placeholder="XML" re></textarea>
 
             <div style="position:absolute;right:20px;top:20px;">
                 <button class="enlarge">Enlarge</button>
             </div>
 
-            <div style="position:absolute;left:20px;top:45%;">
-                <button id="fromXml" class="small">⇇</button>
-                <button id="toXml" class="small">⇉</button>
+            <div style="position:absolute;left:-12px;top:45%;">
+                <button id="xmlToJson" class="small">⇇</button>
+                <button id="jsonToXml" class="small">⇉</button>
             </div>
 
-            <div style="position:absolute;right:20px;top:45%;">
-                <button id="fromGraph" class="small">⇇</button>
-                <button id="toGraph" class="small">⇉</button>
+            <div style="position:absolute;right:-12px;top:45%;z-index:2;">
+                <button id="graphToXml" class="small">⇇</button>
+                <button id="xmlToGraph" class="small">⇉</button>
             </div>
         </div>
 
-        <div class="luik" style="flex:.6;border:2px solid #e6e6e6;">
+        <div class="luik" style="flex:3;border:2px solid #e6e6e6;">
             <div id="drawing"></div>
 
             <div style="position:absolute;right:20px;top:20px;">
                 <button class="enlarge">Enlarge</button>
-                <button id="horizontal">Auto Arrange ⇉</button>
-                <button id="vertical">Auto Arrange ⇊</button>
-                <button id="organic">Auto Arrange ↺</button>
-                <button id="newNode" style="cursor:move;">Drag new node</button>
+                <!-- <button id="export">Export to jpeg</button> -->
+
+                <button id="horizontal" style="margin-top: 50px;">Arrange ⇉</button>
+                <button id="vertical">Arrange ⇊</button>
+                <button id="organic">Arrange ↺</button>
+
+                <button id="newStart" style="cursor:move;background: #CDDC39;margin-top: 50px;">New start</button>
+                <button id="newNode" style="cursor:move;background: #CDDC39;">New node</button>
+                <button id="newEnd" style="cursor:move;background: #CDDC39;">New end</button>
             </div>
         </div>
 
-        <div class="luik" style="flex:.2;border:2px solid #e6e6e6;border-left:0;">
-            props
+        <div class="luik" style="flex:1;border:2px solid #e6e6e6;border-left:0;padding:10px;display: flex;flex-direction: column;">
+            <div class="form-row" id="procTitle">
+                <label>Procedure title</label>
+                <textarea rows="3"></textarea>
+            </div>
+
+            <div class="form-row" id="procDesc" style="flex:1">
+                <label>Procedure description</label>
+                <div contenteditable></div>
+            </div>
+
+            <div class="form-row" id="itemTitle" style="display:none;">
+                <label>Item title</label>
+                <textarea rows="3"></textarea>
+            </div>
+
+            <div class="form-row" id="itemDesc" style="display:none;">
+                <label>Item description</label>
+                <div contenteditable></div>
+            </div>
         </div>
     </div>
 </body>

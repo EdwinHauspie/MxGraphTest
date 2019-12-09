@@ -1,0 +1,45 @@
+    //Helper
+
+    graph.convertValueToString = function (cell) {
+        if (mxUtils.isNode(cell.value)) {
+            if (cell.value.nodeName.toLowerCase() == 'person') {
+                var firstName = cell.getAttribute('firstName', '');
+                var lastName = cell.getAttribute('lastName', '');
+
+                if (lastName != null && lastName.length > 0) {
+                    return lastName + ', ' + firstName;
+                }
+
+                return firstName;
+            }
+            else if (cell.value.nodeName.toLowerCase() == 'knows') {
+                return cell.value.nodeName + ' (Since '
+                    + cell.getAttribute('since', '') + ')';
+            }
+
+        }
+
+        return '';
+    };
+
+
+
+
+    //Code to add cells
+
+    try {
+        model.beginUpdate();
+        var parent = graph.getDefaultParent();
+        var defaultSize = { w: 140, h: 80 };
+        var v1 = graph.insertVertex(parent, null, 'Gebeurt de doorzoeking op heterdaad?', 40, 40, defaultSize.w, defaultSize.h);
+        var v2 = graph.insertVertex(parent, null, 'Geeft de eigenaar toestemming?', 320, 200, defaultSize.w, defaultSize.h);
+        var v3 = graph.insertVertex(parent, null, 'Je moet niks doen.', 40, 360, defaultSize.w, defaultSize.h);
+        addOverlays(graph, v1);
+        addOverlays(graph, v2);
+        addOverlays(graph, v3);
+        graph.insertEdge(parent, null, 'Ja', v1, v2);
+        graph.insertEdge(parent, null, 'Neen', v1, v3);
+    }
+    finally {
+        model.endUpdate();
+    }
