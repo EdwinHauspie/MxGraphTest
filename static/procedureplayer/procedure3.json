@@ -1,11 +1,11 @@
 {
     "title": "Testprocedure",
-    "contents": "Dit is een test",
+    "contents": "<img width=\"150\" src=\"https://media.makeameme.org/created/standard-procedure-5bf51b.jpg\">",
     "layout": "layout1",
     "nodes": [
         {
             "id": "2",
-            "geometry": "<mxGeometry x=\"45\" width=\"50\" height=\"50\" as=\"geometry\"/>",
+            "geometry": "<mxGeometry x=\"50\" width=\"40\" height=\"40\" as=\"geometry\"/>",
             "style": "editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#66CC00;",
             "edges": [
                 {
@@ -17,8 +17,9 @@
         },
         {
             "id": "4",
-            "title": "Is het koud ?",
+            "title": "Is het koud?",
             "geometry": "<mxGeometry y=\"150\" width=\"140\" height=\"80\" as=\"geometry\"/>",
+            "contents": "Is het <b style=\"color:red;\">minder</b> dan 10 graden celsius?",
             "edges": [
                 {
                     "id": "5",
@@ -42,7 +43,7 @@
         },
         {
             "id": "8",
-            "geometry": "<mxGeometry x=\"45\" y=\"510\" width=\"50\" height=\"50\" as=\"geometry\"/>",
+            "geometry": "<mxGeometry x=\"50\" y=\"510\" width=\"40\" height=\"40\" as=\"geometry\"/>",
             "style": "editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#FF6666;",
             "edges": []
         }
