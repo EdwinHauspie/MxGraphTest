@@ -10,19 +10,19 @@
 </head>
 
 <body>
-    <div style="display: flex;height: 100%;">
-        <div class="luik" style="flex:1;">
+    <div style="display:flex;height: 100%;">
+        <div class="luik" style="width:15%;">
             <textarea id="json" placeholder="JSON"></textarea>
 
             <div style="position:absolute;right:20px;top:20px;">
                 <button class="enlarge">Enlarge</button>
 
-                <button id="loadJson" style="margin-top: 50px;">Load</button>
+                <button id="loadJson">Load</button>
                 <button id="saveJson">Save</button>
             </div>
         </div>
 
-        <div class="luik" style="flex:1;">
+        <div class="luik" style="width:15%;">
             <textarea id="xml" placeholder="XML" re></textarea>
 
             <div style="position:absolute;right:20px;top:20px;">
@@ -40,24 +40,29 @@
             </div>
         </div>
 
-        <div class="luik" style="flex:3;border:2px solid #e6e6e6;">
-            <div id="drawing"></div>
+        <div class="luik" style="width:55%;border:2px solid #e6e6e6;">
+            <div id="drawing" tabindex="0"></div>
 
             <div style="position:absolute;right:20px;top:20px;">
                 <button class="enlarge">Enlarge</button>
-                <!-- <button id="export">Export to jpeg</button> -->
 
-                <button id="horizontal" style="margin-top: 50px;">Arrange ⇉</button>
+                <div style="padding: 15px 30px;background: #fff;box-shadow: 1px 1px 0px 2px #333;">
+                    <button id="newNode" style="cursor: move;background: #fff;border-radius: 8px;border: 1px solid grey;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;">                    </button>
+                    <button id="newStart" style="cursor:move;background: #ffffff;border-radius: 70px;border: 2px solid #66cc00;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></button>
+                    <button id="newEnd" style="cursor:move;background: #ffffff;border-radius: 70px;border: 2px solid #ff6666;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;margin: 0;"></button>
+                </div>
+                <button id="horizontal" style="margin-top: 15px;">Arrange ⇉</button>
                 <button id="vertical">Arrange ⇊</button>
                 <button id="organic">Arrange ↺</button>
-
-                <button id="newStart" style="cursor:move;background: #CDDC39;margin-top: 50px;">New start</button>
-                <button id="newNode" style="cursor:move;background: #CDDC39;">New node</button>
-                <button id="newEnd" style="cursor:move;background: #CDDC39;">New end</button>
+                <button id="zoomIn">Zoom in</button>
+                <button id="zoomOut">Zoom out</button>
+                <button id="zoomReset">Zoom reset</button>
+                <button id="zoomFit">Zoom to fit</button>
+                <button id="export">Export</button>
             </div>
         </div>
 
-        <div class="luik" style="flex:1;border:2px solid #e6e6e6;border-left:0;padding:10px;display: flex;flex-direction: column;">
+        <div class="luik" style="width:15%;border:2px solid #e6e6e6;border-left:0;padding:10px;display: flex;flex-direction: column;">
             <div class="form-row" id="procTitle">
                 <label>Procedure title</label>
                 <textarea rows="3"></textarea>

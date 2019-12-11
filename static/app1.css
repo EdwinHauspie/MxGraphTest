@@ -6,7 +6,7 @@ body {
 }
 
 #drawing {
-    overflow: auto;
+    overflow: scroll;
     height: 100%;
     width: 100%;
     background-position: -1px -1px;
@@ -16,6 +16,22 @@ body {
 #drawing image {
     opacity: 0.2;
     transition: all .4s;
+}
+
+img.export {
+    cursor: zoom-out;
+    position: fixed;
+    z-index: 9999;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 80%;
+    box-shadow: black 2px 2px 15px -5px;
+    border-radius: 10px;
 }
 
 #drawing image:hover {
@@ -28,7 +44,6 @@ body {
     padding: 10px;
     white-space: pre;
     border: 0;
-    outline: 0;
     height: 100%;
     width: 100%;
     border: 2px solid #e6e6e6;

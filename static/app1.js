@@ -1,14 +1,21 @@
 /*
 
-TODO
-
 - [OK] veldjes invullen / node selecteren en description invullen
-- [ON HOLD] printen to image/pdf
+- [ON] printen to image/pdf
 - [OK] betere icons / hover state
+- [OK] desc invullen van pijl lukt niet
+- [ON HOLD] end node liquideren ?
+- [OK] nieuwe nodes: checken als er al 1 staat op die xy coordinaat
+- [OK] zoom knoppen
+- [OK] drawing scroll bars
+- [OK] delete toets met warning
+- overlays met overlappende nodes...
+- import/scriptje maken van xcs (boom kappen)
+- validatie popup/div
+- knop om afspeelomgeving te openen
 
-- desc invullen van pijl lukt niet
-- knop om afspeelomgeving te openen / validatie popup ???
-- grouping/folding/fases, mss in eerste instantie gewoon de ctrl-g van draw.io met kadertje errond ? nee
+- multi edit van props van nodes ?
+- grouping/folding/fases, mss in eerste instantie gewoon de ctrl-g van draw.io met kadertje errond ? nee, wel groups
 
 */
 
@@ -30,8 +37,22 @@ window.onload = () => {
     var container = Q('#drawing');
     var config = mxUtils.load('static/mxClient/resources/keyhandler-commons.xml').getDocumentElement();
     var editor = new mxEditor(config);
+
+    editor.addAction('customDelete', function() {
+        var cells = graph.getSelectionCells();
+        if (!cells.length) return;
+        if (confirm('Het item wordt verwijderd.')) editor.graph.removeCells();
+    });
+
     editor.setGraphContainer(container);
     var graph = editor.graph;
+
+    var origGraphFireMouseEvent = graph.fireMouseEvent;
+    graph.fireMouseEvent = function(evtName, me, sender) //Keep graph focused
+    {
+      if (evtName == mxEvent.MOUSE_DOWN) this.container.focus();
+      origGraphFireMouseEvent.apply(this, arguments);
+    };
 
     (() => {
         graph.setHtmlLabels(true);
@@ -104,6 +125,12 @@ window.onload = () => {
         nodes: []
     };
 
+    function getProcedureItem(id) {
+        var allEdges = PROC.nodes.map(x => x.edges).reduce((arr, x) => arr = arr.concat(x), []);
+        var allItems = PROC.nodes.concat(allEdges);
+        return allItems.find(x => x.id == id);
+    }
+
     var defaultStyles = {
         start: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#66CC00;',
         end: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#FF6666;'
@@ -131,22 +158,13 @@ window.onload = () => {
                 : null;
         }
 
-        function getExistingcontents(nodeId, edgeId) {
-            var node = PROC.nodes.find(x => x.id == nodeId);
-            if (!node) return null;
-            if (!edgeId) return node.contents;
-            var edge = node.edges.find(x => x.id = edgeId);
-            if (!edge) return null;
-            return edge.contents;
-        }
-
         var nodes = nodeCells
             .map(n => {
                 var nn = attributesToObject(n);
                 return {
                     id: nn.id, //.replace(/^_/, ''),
                     title: nn.value || null,
-                    contents: getExistingcontents(nn.id),
+                    contents: (getProcedureItem(nn.id) || {}).contents || '',
                     geometry: n.getElementsByTagName('mxGeometry')[0].outerHTML.replace(/\n\s*/g, ''),
                     style: nn.style || null,
                     edges: edgeCells
@@ -156,7 +174,7 @@ window.onload = () => {
                             return {
                                 id: ee.id, //.replace(/^_/, ''),
                                 title: ee.value || null,
-                                contents: getExistingcontents(nn.id, ee.id),
+                                contents: (getProcedureItem(ee.id) || {}).contents || '',
                                 target: ee.target, //.replace(/^_/, ''),
                                 geometry: e.getElementsByTagName('mxGeometry')[0].outerHTML.replace(/\n\s*/g, '')
                             };
@@ -255,10 +273,8 @@ window.onload = () => {
 
     //Panels enlarge
     Q('.enlarge').forEach(x => x.onclick = function (e) {
-        if (e.target.closest('.luik').style.flex.startsWith('1')) {
-            Q('.luik').forEach(x => x.style.flex = 1)
-            e.target.closest('.luik').style.flex = 3;
-        }
+        Q('.luik').forEach(x => x.style.width = '15%');
+        e.target.closest('.luik').style.width = '55%';
     });
 
     //Drag a new node
@@ -295,11 +311,12 @@ window.onload = () => {
     var dragSource3 = mxUtils.makeDraggable(Q('#newEnd'), () => graph, (graph, evt, target, x, y) => afterDrag('end', target, x, y), dragEl2, null, null, graph.autoscroll, true);
     dragSource3.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
+    //Overlays
     function addOverlays(cell) {
         var overlay1 = new mxCellOverlay(new mxImage('static/mxClient/resources/new2.png', 16, 16), 'Nieuwe stap');
         overlay1.cursor = 'hand';
         overlay1.align = mxConstants.ALIGN_CENTER;
-        overlay1.offset = new mxPoint(0, -10);
+        overlay1.offset = new mxPoint(0, -9);
         overlay1.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { addChild(graph, cell); }));
         graph.addCellOverlay(cell, overlay1);
 
@@ -307,17 +324,17 @@ window.onload = () => {
         overlay2.cursor = 'hand';
         overlay2.align = mxConstants.ALIGN_RIGHT;
         overlay2.verticalAlign = mxConstants.ALIGN_MIDDLE;
-        overlay2.offset = new mxPoint(-10, 0);
+        overlay2.offset = new mxPoint(-9, 0);
         overlay2.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { addChild(graph, cell, true); }));
         graph.addCellOverlay(cell, overlay2);
 
-        var overlay3 = new mxCellOverlay(new mxImage('static/mxClient/resources/delete.png', 16, 16), 'Verwijderen');
+        /*var overlay3 = new mxCellOverlay(new mxImage('static/mxClient/resources/delete.png', 16, 16), 'Verwijderen');
         overlay3.cursor = 'hand';
         overlay3.offset = new mxPoint(12, 14);
         overlay3.align = mxConstants.ALIGN_LEFT;
         overlay3.verticalAlign = mxConstants.ALIGN_TOP;
         overlay3.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { deleteSubtree(graph, cell); }));
-        graph.addCellOverlay(cell, overlay3);
+        graph.addCellOverlay(cell, overlay3);*/
     }
 
     function addChild(graph, cell, horizontal) {
@@ -326,8 +343,12 @@ window.onload = () => {
 
         try {
             model.beginUpdate();
-            var vertex = graph.insertVertex(parent, null, 'Nieuwe stap');
-            var geometry = model.getGeometry(vertex);
+            var newCell = graph.insertVertex(parent, null, 'Nieuwe stap');
+            var geometry = model.getGeometry(newCell);
+
+            geometry.width = 140;
+            geometry.height = 80;
+
             if (horizontal) {
                 geometry.x = cell.geometry.x + cell.geometry.width + 120;
                 geometry.y = cell.geometry.y;
@@ -336,16 +357,24 @@ window.onload = () => {
                 geometry.x = cell.geometry.x;
                 geometry.y = cell.geometry.y + cell.geometry.height + 80;
             }
-            geometry.width = 140;
-            geometry.height = 80;
-            graph.insertEdge(parent, null, 'Nieuwe keuze', cell, vertex);
+
+            //Make sure there is no node at those positions
+            function spn() { return Object.keys(model.cells).find(x => newCell.id != model.cells[x].id && model.cells[x].geometry && model.cells[x].geometry.x == geometry.x && model.cells[x].geometry.y == geometry.y); };
+            var samePositionNode = spn();
+            while (samePositionNode) {
+                geometry.x += 20;
+                geometry.y += 20;
+                samePositionNode = spn();
+            }
+
+            graph.insertEdge(parent, null, '', cell, newCell);
         }
         finally {
             model.endUpdate();
         }
     }
 
-    function deleteSubtree(graph, cell) {
+    /*function deleteSubtree(graph, cell) {
         var cells = [];
         graph.traverse(cell, true, function (vertex) {
             cells.push(vertex);
@@ -354,7 +383,38 @@ window.onload = () => {
 
         if (confirm('Dit item en eventueel onderliggende items worden verwijderd.\nWeet je het zeker?'))
             graph.removeCells(cells);
-    }
+    }*/
+
+    //Export to png
+    Q('#export').onclick = function () {
+        graph.clearSelection();
+        var bounds = graph.getGraphBounds();
+
+        var svg = document.querySelector('svg');
+        var img = document.createElement('img');
+        var img2 = document.createElement('img');
+        var canvas = document.createElement('canvas');
+        canvas.width = bounds.width;
+        canvas.height = bounds.height;
+
+        img.onload = function () {
+            canvas.getContext('2d').drawImage(img, -1 * bounds.x, -1 * bounds.y);
+            img2.src = canvas.toDataURL('image/png');
+            img2.classList.add('export');
+            img2.onclick = function () { Q('body').removeChild(img2); };
+            Q('body').appendChild(img2);
+        }
+
+        var xml = new XMLSerializer().serializeToString(svg);
+        xml = xml.replace('<svg xmlns="http://www.w3.org/2000/svg" style="', `<svg xmlns="http://www.w3.org/2000/svg" width="${bounds.width + bounds.x}" height="${bounds.height + bounds.y}" style="background-color:white;`); //https://stackoverflow.com/questions/43165562/canvas-todataurl-returns-blank-image-in-firefox-even-with-onload-and-callback
+        img.src = 'data:image/svg+xml;base64,' + btoa(xml);
+    };
+
+    //Zooming
+    Q('#zoomReset').onclick = () => graph.zoomActual();
+    Q('#zoomIn').onclick = () => graph.zoomIn();
+    Q('#zoomOut').onclick = () => graph.zoomOut();
+    Q('#zoomFit').onclick = () => graph.fit();
 
     //Graph events
     graph.getModel().addListener(mxEvent.CHANGE, function () {
@@ -362,14 +422,22 @@ window.onload = () => {
         xmlToJs();
     });
 
+    var lastCell = null;
+
     graph.addMouseListener({
         mouseMove: function (sender, me) {
             if (me && me.state && me.state.cell && me.state.cell.vertex) {
-                if (!me.state.cell.overlays || !me.state.cell.overlays.length)
+                if (!me.state.cell.overlays || !me.state.cell.overlays.length) {
+                    if (lastCell == me.state.cell) return;
                     addOverlays(me.state.cell);
+                    lastCell = me.state.cell;
+                }
             }
-            else for (var c in graph.getModel().cells) {
-                graph.removeCellOverlays(graph.getModel().cells[c])
+            else {
+                if (lastCell) {
+                    graph.removeCellOverlays(lastCell);
+                    lastCell = null;
+                }
             }
         },
         mouseDown: function (sender, me) { },
@@ -386,8 +454,8 @@ window.onload = () => {
             Q('#itemTitle').style.display = '';
             Q('#itemDesc').style.display = '';
 
-            var item = PROC.nodes.find(x => x.id == cell.id) || [].concat.apply([], PROC.nodes.map(x => x.edges)).find(x => x.id == cell.id);
-            Q('textarea', '#itemTitle').value = item.title;
+            var item = getProcedureItem(cell.id) || {};
+            Q('textarea', '#itemTitle').value = item.title || '';
             Q('[contentEditable]', '#itemDesc').innerHTML = item.contents || '';
         }
         else {
@@ -417,7 +485,8 @@ window.onload = () => {
 
     Q('[contentEditable]', '#itemDesc').onkeyup = function (e) {
         var cell = graph.getSelectionCell();
-        PROC.nodes.find(x => x.id == cell.id).contents = Q('[contentEditable]', '#itemDesc').innerHTML;
+        var item = getProcedureItem(cell.id);
+        item.contents = Q('[contentEditable]', '#itemDesc').innerHTML;
         showJson();
     };
 };
