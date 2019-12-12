@@ -8,8 +8,8 @@ let ProcedurePlayer = (function () {
         async start() {
             let breadCrumb = [];
             let pointer = null;
-            let P = await getJson(`procedure${document.querySelector('script').src.split('=')[2]}.json`);
-            let layout = await getText(P.layout + '.html');
+            let P = await getJson(`/procedures/procedure1.json`);
+            let layout = await getText('/procedureplayer/layout1.html');
 
             this.el.onclick = e => {
                 let cls = [...e.target.classList].filter(x => x.startsWith('goto'))[0];
@@ -72,15 +72,15 @@ let ProcedurePlayer = (function () {
             const setHtml = (sel, html) => (sel ? this.el.querySelector(sel) : this.el).innerHTML = html;
             const getEntryNode = () => {
                 let targets = P.nodes.reduce(function (agg, x) { return agg.concat((x.edges || []).map(y => y.target)); }, []);
-                return P.nodes.filter(x => x.id == 2)/*!targets.includes(x.id))*/[0];
+                return P.nodes.filter(x => !targets.includes(x.id))[0];
             };
             navigateToNode(0);
         }
     }
 
     //Private methods
-    const getJson = async name => await fetch(`static/procedureplayer/${name}`).then(r => r.json());
-    const getText = async name => await fetch(`static/procedureplayer/${name}`).then(r => r.text());
+    const getJson = async url => await fetch(url).then(r => r.json());
+    const getText = async url => await fetch(url).then(r => r.text());
     const arrayToHtml = (arr, func) => (arr || []).reduce((agg, x) => (agg += func(x)), '');
 
     return ProcedurePlayer;

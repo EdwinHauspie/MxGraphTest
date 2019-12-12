@@ -9,7 +9,7 @@
 - [OK] zoom knoppen
 - [OK] drawing scroll bars
 - [OK] delete toets met warning
-- overlays met overlappende nodes...
+- [OK] align new nodes with centers
 - import/scriptje maken van xcs (boom kappen)
 - validatie popup/div
 - knop om afspeelomgeving te openen
@@ -23,19 +23,15 @@ window.onload = () => {
     let M = mxClient;
 
     //Browser check
-    if (!M || !M.isBrowserSupported) {
-        alert('mxGraph not found.');
-        return;
-    }
-
     if (!M.isBrowserSupported()) {
         alert('Browser not supported.');
         return;
     }
 
     //Setup and styling of graph and editor
+    var resourcePath = '/proceduremanager/mxGraph/resources/';
     var container = Q('#drawing');
-    var config = mxUtils.load('static/mxClient/resources/keyhandler-commons.xml').getDocumentElement();
+    var config = mxUtils.load(resourcePath + 'keyhandler-commons.xml').getDocumentElement();
     var editor = new mxEditor(config);
 
     editor.addAction('customDelete', function() {
@@ -59,10 +55,10 @@ window.onload = () => {
         graph.setPanning(true);
         graph.setConnectable(true);
         graph.setAllowDanglingEdges(false);
-        graph.setEdgeLabelsMovable(false);
+        //graph.setEdgeLabelsMovable(false);
         graph.setTooltips(false);
         graph.setCellsCloneable(false); //Prevent cloning cells by dragging them while holding down <ctrl>
-        mxEvent.disableContextMenu(container);
+        //mxEvent.disableContextMenu(container);
         mxGraphHandler.prototype.guidesEnabled = true; // Enables guides
         new mxRubberband(graph); //Enable multi mouse selection
         mxEdgeHandler.prototype.addEnabled = true;
@@ -104,26 +100,8 @@ window.onload = () => {
         graph.getStylesheet().putDefaultVertexStyle(style);
     })();
 
-    function Q(selector, ctx) {
-        let results = [];
-
-        if (selector.nodeType) results.push(selector);
-        else if (selector instanceof Array) results = selector;
-        else {
-            if (!ctx) ctx = window.document;
-            else if (typeof ctx === 'string') ctx = window.document.querySelector(ctx);
-            results = [].slice.call(ctx.querySelectorAll(selector));
-        }
-
-        return results.length === 1 ? results[0] : results;
-    }
-
     //Convert xml to json
-    var PROC = {
-        title: '',
-        contents: '',
-        nodes: []
-    };
+    var PROC = { title: '', contents: '', nodes: [] };
 
     function getProcedureItem(id) {
         var allEdges = PROC.nodes.map(x => x.edges).reduce((arr, x) => arr = arr.concat(x), []);
@@ -131,9 +109,11 @@ window.onload = () => {
         return allItems.find(x => x.id == id);
     }
 
-    var defaultStyles = {
+    var defaults = {
         start: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#66CC00;',
-        end: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#FF6666;'
+        end: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#FF6666;',
+        nodeWidth: 140,
+        nodeHeight: 80
     };
 
     /*var nodeGeometry = '<mxGeometry x="40" y="40" width="140" height="80" as="geometry"/>';
@@ -254,7 +234,7 @@ window.onload = () => {
 
     //Load and save json
     Q('#loadJson').onclick = async function () {
-        var path = prompt('Procedure path', '/static/procedureplayer/procedure3.json');
+        var path = /*prompt('Procedure path',*/ '/procedures/procedure3.json';
         PROC = await fetch(path).then(r => r.json());
         showJson();
         jsToXml();
@@ -281,8 +261,8 @@ window.onload = () => {
     function afterDrag(type, target, x, y) {
         var cell = new mxCell(type == 'node' ? 'Nieuwe stap' : null, new mxGeometry(0, 0, type == 'node' ? 140 : 40, type == 'node' ? 80 : 40));
         cell.vertex = true;
-        if (type == 'start') cell.style = defaultStyles.start;
-        if (type == 'end') cell.style = defaultStyles.end;
+        if (type == 'start') cell.style = defaults.start;
+        if (type == 'end') cell.style = defaults.end;
         var cells = graph.importCells([cell], x, y, target);
 
         if (cells != null && cells.length > 0) {
@@ -313,22 +293,22 @@ window.onload = () => {
 
     //Overlays
     function addOverlays(cell) {
-        var overlay1 = new mxCellOverlay(new mxImage('static/mxClient/resources/new2.png', 16, 16), 'Nieuwe stap');
+        var overlay1 = new mxCellOverlay(new mxImage(resourcePath + 'new2.png', 16, 16), 'Nieuwe stap');
         overlay1.cursor = 'hand';
         overlay1.align = mxConstants.ALIGN_CENTER;
-        overlay1.offset = new mxPoint(0, -9);
+        overlay1.offset = new mxPoint(0, -12);
         overlay1.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { addChild(graph, cell); }));
         graph.addCellOverlay(cell, overlay1);
 
-        var overlay2 = new mxCellOverlay(new mxImage('static/mxClient/resources/new.png', 16, 16), 'Nieuwe stap');
+        var overlay2 = new mxCellOverlay(new mxImage(resourcePath + 'new.png', 16, 16), 'Nieuwe stap');
         overlay2.cursor = 'hand';
         overlay2.align = mxConstants.ALIGN_RIGHT;
         overlay2.verticalAlign = mxConstants.ALIGN_MIDDLE;
-        overlay2.offset = new mxPoint(-9, 0);
+        overlay2.offset = new mxPoint(-12, 0);
         overlay2.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { addChild(graph, cell, true); }));
         graph.addCellOverlay(cell, overlay2);
 
-        /*var overlay3 = new mxCellOverlay(new mxImage('static/mxClient/resources/delete.png', 16, 16), 'Verwijderen');
+        /*var overlay3 = new mxCellOverlay(new mxImage(resourcePath + 'delete.png', 16, 16), 'Verwijderen');
         overlay3.cursor = 'hand';
         overlay3.offset = new mxPoint(12, 14);
         overlay3.align = mxConstants.ALIGN_LEFT;
@@ -346,15 +326,15 @@ window.onload = () => {
             var newCell = graph.insertVertex(parent, null, 'Nieuwe stap');
             var geometry = model.getGeometry(newCell);
 
-            geometry.width = 140;
-            geometry.height = 80;
+            geometry.width = defaults.nodeWidth;
+            geometry.height = defaults.nodeHeight;
 
             if (horizontal) {
                 geometry.x = cell.geometry.x + cell.geometry.width + 120;
-                geometry.y = cell.geometry.y;
+                geometry.y = cell.geometry.y + ((cell.geometry.height - defaults.nodeHeight) / 2);
             }
             else {
-                geometry.x = cell.geometry.x;
+                geometry.x = cell.geometry.x + ((cell.geometry.width - defaults.nodeWidth) / 2);
                 geometry.y = cell.geometry.y + cell.geometry.height + 80;
             }
 
@@ -373,17 +353,6 @@ window.onload = () => {
             model.endUpdate();
         }
     }
-
-    /*function deleteSubtree(graph, cell) {
-        var cells = [];
-        graph.traverse(cell, true, function (vertex) {
-            cells.push(vertex);
-            return true;
-        });
-
-        if (confirm('Dit item en eventueel onderliggende items worden verwijderd.\nWeet je het zeker?'))
-            graph.removeCells(cells);
-    }*/
 
     //Export to png
     Q('#export').onclick = function () {
@@ -422,23 +391,20 @@ window.onload = () => {
         xmlToJs();
     });
 
-    var lastCell = null;
+    function removeAllOverlays() {
+        var cells = Object.keys(graph.getModel().cells).map(x => graph.getModel().cells[x]);
+        cells.forEach(x => graph.removeCellOverlays(x));
+    }
 
     graph.addMouseListener({
         mouseMove: function (sender, me) {
-            if (me && me.state && me.state.cell && me.state.cell.vertex) {
-                if (!me.state.cell.overlays || !me.state.cell.overlays.length) {
-                    if (lastCell == me.state.cell) return;
+            if (me && me.state && me.state.cell) {
+                if (me.state.cell.vertex && isEmpty(me.state.cell.overlays)) {
+                    removeAllOverlays();
                     addOverlays(me.state.cell);
-                    lastCell = me.state.cell;
                 }
             }
-            else {
-                if (lastCell) {
-                    graph.removeCellOverlays(lastCell);
-                    lastCell = null;
-                }
-            }
+            else removeAllOverlays();
         },
         mouseDown: function (sender, me) { },
         mouseUp: function (sender, me) { },

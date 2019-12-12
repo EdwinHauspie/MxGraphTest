@@ -1,5 +1,4 @@
     //Helper
-
     graph.convertValueToString = function (cell) {
         if (mxUtils.isNode(cell.value)) {
             if (cell.value.nodeName.toLowerCase() == 'person') {
@@ -21,6 +20,61 @@
 
         return '';
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*function deleteSubtree(graph, cell) {
+        var cells = [];
+        graph.traverse(cell, true, function (vertex) {
+            cells.push(vertex);
+            return true;
+        });
+
+        if (confirm('Dit item en eventueel onderliggende items worden verwijderd.\nWeet je het zeker?'))
+            graph.removeCells(cells);
+    }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
