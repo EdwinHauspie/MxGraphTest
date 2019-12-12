@@ -16,12 +16,12 @@
 		<add as="86" control="1" action="paste"/>
 		<add as="113" action="edit"/>
 		<add as="123" action="showProperties"/>
-		<add as="71" control="1" action="group"/>
-		<add as="85" control="1" action="ungroup"/>
 		<add as="90" control="1" action="undo"/>
 		<add as="89" control="1" action="redo"/>
+		<add as="71" control="1" action="group"/>
+		<add as="85" control="1" action="ungroup"/-->
 		<add as="107" action="zoomIn"/>
-		<add as="109" action="zoomOut"/-->
+		<add as="109" action="zoomOut"/>
 		<add as="46" action="customDelete"/>
 	</mxDefaultKeyHandler>
 </mxEditor>

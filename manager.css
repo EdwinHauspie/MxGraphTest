@@ -32,6 +32,9 @@ img.export {
     max-height: 80%;
     box-shadow: black 2px 2px 15px -5px;
     border-radius: 10px;
+    transform: translateY(-30px) rotateY(45deg);
+    opacity: .01;
+    transition: all .3s;
 }
 
 #drawing image:hover {
@@ -62,11 +65,10 @@ textarea {
 
 button {
     background: #d4e2ff;
-    padding: 6px 12px;
+    padding: 6px 0;
     cursor: pointer;
     border: 0px solid #e6e6e6;
     display: block;
-    margin-bottom: 15px;
     width: 100px;
     box-shadow: 1px 1px 0px 2px #333;
 }

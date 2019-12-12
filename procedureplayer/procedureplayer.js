@@ -8,7 +8,7 @@ let ProcedurePlayer = (function () {
         async start() {
             let breadCrumb = [];
             let pointer = null;
-            let P = await getJson(`/procedures/procedure1.json`);
+            let P = localStorage.getItem('playproc') ? JSON.parse(localStorage.getItem('playproc')) : (await getJson(`/procedures/procedure1.json`));
             let layout = await getText('/procedureplayer/layout1.html');
 
             this.el.onclick = e => {
@@ -63,8 +63,8 @@ let ProcedurePlayer = (function () {
                     <li class="node"><a href="#" class="goto0">${P.title}</a></li>
                     <li class="step">🡓</li>
                     ${breadCrumb.map(x => P.nodes.filter(y => y.id == x)[0]).reduce((agg, x, i) => agg += `
-                        <li class="node"><!--a href="#" class="goto${x.id}"-->${x.title}<!--/a--></li>
-                        ${breadCrumb[i + 1] ? `<li class="step">🡓 <em>${x.edges.filter(y => y.target == breadCrumb[i + 1])[0].title}</em></li>` : ''}`, '')}
+                        <li class="node"><!--a href="#" class="goto${x.id}"-->${x.title||''}<!--/a--></li>
+                        ${breadCrumb[i + 1] ? `<li class="step">${x.edges.filter(y => y.target == breadCrumb[i + 1])[0].title||''}</li>` : ''}`, '')}
                 </ul>`;
                 setHtml('.breadcrumb', crumbHtml);
             };

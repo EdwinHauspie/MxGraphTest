@@ -4,29 +4,23 @@
 - [ON] printen to image/pdf
 - [OK] betere icons / hover state
 - [OK] desc invullen van pijl lukt niet
-- [ON HOLD] end node liquideren ?
 - [OK] nieuwe nodes: checken als er al 1 staat op die xy coordinaat
 - [OK] zoom knoppen
-- [OK] drawing scroll bars
+- [OK] scroll bars
 - [OK] delete toets met warning
 - [OK] align new nodes with centers
-- import/scriptje maken van xcs (boom kappen)
-- validatie popup/div
-- knop om afspeelomgeving te openen
+- [OK] import/scriptje maken van xcs "Boom: kappen"
+- [OK] autosize
+- [OK] remove points after auto arrange
+- validatie (geen beginpunt + endless loop)
+- knop om naar afspeelomgeving te gaan
 
-- multi edit van props van nodes ?
-- grouping/folding/fases, mss in eerste instantie gewoon de ctrl-g van draw.io met kadertje errond ? nee, wel groups
-
-*/
+- [ON HOLD] end node liquideren ?
+(- multi edit van props van nodes? ivm groups? grouping/folding/fases, mss in eerste instantie gewoon de ctrl-g van draw.io met kadertje errond ? nee, wel groups)*/
 
 window.onload = () => {
     let M = mxClient;
-
-    //Browser check
-    if (!M.isBrowserSupported()) {
-        alert('Browser not supported.');
-        return;
-    }
+    if (!M.isBrowserSupported()) return alert('Browser not supported.');
 
     //Setup and styling of graph and editor
     var resourcePath = '/proceduremanager/mxGraph/resources/';
@@ -34,20 +28,34 @@ window.onload = () => {
     var config = mxUtils.load(resourcePath + 'keyhandler-commons.xml').getDocumentElement();
     var editor = new mxEditor(config);
 
-    editor.addAction('customDelete', function() {
+    function customDelete() {
         var cells = graph.getSelectionCells();
-        if (!cells.length) return;
-        if (confirm('Het item wordt verwijderd.')) editor.graph.removeCells();
-    });
+
+        if (cells.length) {
+            if (confirm('De selectie wordt verwijderd.\nDoorgaan?'))
+                graph.removeCells();
+        }
+        else if (confirm('Geen cellen geselecteerd.\nAlle cellen verwijderen?')) {
+            graph.selectAll();
+            graph.removeCells();
+        }
+    }
+
+    editor.addAction('customDelete', customDelete);
+    Q('#delete').onclick = function () { customDelete(); };
 
     editor.setGraphContainer(container);
-    var graph = editor.graph;
+    window.graph = editor.graph; //TEMP (for testing, don't put in window scope)
+
+    function getGraphCells(includeSpecials) {
+        return Object.keys(graph.getModel().cells).map(x => graph.getModel().cells[x]).filter(x => x.vertex && (includeSpecials || !(x.style || '').includes('ellipse')));
+    }
 
     var origGraphFireMouseEvent = graph.fireMouseEvent;
-    graph.fireMouseEvent = function(evtName, me, sender) //Keep graph focused
+    graph.fireMouseEvent = function (evtName, me, sender) //Keep graph focused
     {
-      if (evtName == mxEvent.MOUSE_DOWN) this.container.focus();
-      origGraphFireMouseEvent.apply(this, arguments);
+        if (evtName == mxEvent.MOUSE_DOWN) this.container.focus();
+        origGraphFireMouseEvent.apply(this, arguments);
     };
 
     (() => {
@@ -58,7 +66,7 @@ window.onload = () => {
         //graph.setEdgeLabelsMovable(false);
         graph.setTooltips(false);
         graph.setCellsCloneable(false); //Prevent cloning cells by dragging them while holding down <ctrl>
-        //mxEvent.disableContextMenu(container);
+        mxEvent.disableContextMenu(container);
         mxGraphHandler.prototype.guidesEnabled = true; // Enables guides
         new mxRubberband(graph); //Enable multi mouse selection
         mxEdgeHandler.prototype.addEnabled = true;
@@ -73,7 +81,7 @@ window.onload = () => {
         style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
         style[mxConstants.STYLE_FONTSIZE] = 13;
         style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-        //style[mxConstants.STYLE_ROUNDED] = true;
+        style[mxConstants.STYLE_ROUNDED] = true;
         //style[mxConstants.STYLE_EDGE] = mxConstants.EDGESTYLE_ELBOW;
         graph.getStylesheet().putDefaultEdgeStyle(style);
 
@@ -95,7 +103,7 @@ window.onload = () => {
         style[mxConstants.STYLE_STROKECOLOR] = '#4d4d4d';
         style[mxConstants.STYLE_FILLCOLOR] = '#ffffff';
         style[mxConstants.STYLE_SPACING] = 15;
-        style[mxConstants.STYLE_OVERFLOW] = 'hidden';
+        style[mxConstants.STYLE_OVERFLOW] = 'visible'; //Important for autosize
         style[mxConstants.STYLE_FONTCOLOR] = '#000000';
         graph.getStylesheet().putDefaultVertexStyle(style);
     })();
@@ -113,13 +121,13 @@ window.onload = () => {
         start: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#66CC00;',
         end: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#FF6666;',
         nodeWidth: 140,
-        nodeHeight: 80
+        nodeHeight: 80,
+        nodeGeometry: '<mxGeometry x="40" y="40" width="140" height="80" as="geometry"/>',
+        edgeGeometry: '<mxGeometry relative="1" as="geometry"/>'
     };
 
-    /*var nodeGeometry = '<mxGeometry x="40" y="40" width="140" height="80" as="geometry"/>';
-    var startGeometry = '<mxGeometry x="40" y="40" width="40" height="40" as="geometry"/>';
-    var endGeometry = '<mxGeometry x="40" y="40" width="40" height="40" as="geometry"/>';
-    var edgeGeometry = '<mxGeometry relative="1" as="geometry"/>';*/
+    //var startGeometry = '<mxGeometry x="40" y="40" width="40" height="40" as="geometry"/>';
+    //var endGeometry = '<mxGeometry x="40" y="40" width="40" height="40" as="geometry"/>';
 
     function showJson() {
         Q('#json').value = JSON.stringify(PROC, (key, value) => { if (value !== null) return value }, '    ');
@@ -185,8 +193,8 @@ window.onload = () => {
         }
 
         PROC.nodes.forEach(n => {
-            xml += `<mxCell id="${n.id}" value="${restoreLineBreaks(n.title || '')}" style="${n.style || ''}" parent="1" vertex="1">${n.geometry}</mxCell>`;
-            (n.edges || []).forEach(e => (xml += `<mxCell id="${e.id || randomId()}" value="${restoreLineBreaks(e.title || '')}" parent="1" source="${n.id}" target="${e.target}" edge="1">${e.geometry}</mxCell>`));
+            xml += `<mxCell id="${n.id}" value="${restoreLineBreaks(n.title || '')}" style="${n.style || ''}" parent="1" vertex="1">${n.geometry || defaults.nodeGeometry}</mxCell>`;
+            (n.edges || []).forEach(e => (xml += `<mxCell id="${e.id || randomId()}" value="${restoreLineBreaks(e.title || '')}" parent="1" source="${n.id}" target="${e.target}" edge="1">${e.geometry || defaults.edgeGeometry}</mxCell>`));
         });
 
         var xmlDoc = mxUtils.parseXml(`<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>${xml}</root></mxGraphModel>`);
@@ -196,23 +204,6 @@ window.onload = () => {
     }
 
     Q('#jsToXml').onclick = jsToXml;
-
-    //Auto arrange
-    Q('#vertical').onclick = function () {
-        var layout = new mxHierarchicalLayout(graph);
-        layout.execute(graph.getDefaultParent());
-    };
-
-    Q('#horizontal').onclick = function () {
-        var layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
-        layout.execute(graph.getDefaultParent());
-    };
-
-    Q('#organic').onclick = function () {
-        var layout = new mxFastOrganicLayout(graph);
-        layout.forceConstant = 120;
-        layout.execute(graph.getDefaultParent());
-    };
 
     //Convert graph to xml
     function graphToXml() {
@@ -234,7 +225,7 @@ window.onload = () => {
 
     //Load and save json
     Q('#loadJson').onclick = async function () {
-        var path = /*prompt('Procedure path',*/ '/procedures/procedure3.json';
+        var path = /*prompt('Procedure path',*/ '/procedures/procedure4.json';
         PROC = await fetch(path).then(r => r.json());
         showJson();
         jsToXml();
@@ -339,7 +330,7 @@ window.onload = () => {
             }
 
             //Make sure there is no node at those positions
-            function spn() { return Object.keys(model.cells).find(x => newCell.id != model.cells[x].id && model.cells[x].geometry && model.cells[x].geometry.x == geometry.x && model.cells[x].geometry.y == geometry.y); };
+            function spn() { return getGraphCells().filter(x => x != newCell).find(x => x.geometry.x == geometry.x && x.geometry.y == geometry.y); };
             var samePositionNode = spn();
             while (samePositionNode) {
                 geometry.x += 20;
@@ -356,6 +347,7 @@ window.onload = () => {
 
     //Export to png
     Q('#export').onclick = function () {
+        graph.zoomActual();
         graph.clearSelection();
         var bounds = graph.getGraphBounds();
 
@@ -370,8 +362,11 @@ window.onload = () => {
             canvas.getContext('2d').drawImage(img, -1 * bounds.x, -1 * bounds.y);
             img2.src = canvas.toDataURL('image/png');
             img2.classList.add('export');
-            img2.onclick = function () { Q('body').removeChild(img2); };
+            img2.onclick = function () { img2.style = ''; setTimeout(() =>Q('body').removeChild(img2), 500); };
             Q('body').appendChild(img2);
+            setTimeout(() => {
+                img2.style = "opacity:1;transform: none;";
+            }, 100);
         }
 
         var xml = new XMLSerializer().serializeToString(svg);
@@ -385,6 +380,69 @@ window.onload = () => {
     Q('#zoomOut').onclick = () => graph.zoomOut();
     Q('#zoomFit').onclick = () => graph.fit();
 
+
+    //Auto size
+    function autoSize(doAllCells) {
+        var cells = doAllCells ? getGraphCells(false) : graph.getSelectionCells();
+
+        if (cells == null || !cells.length) {
+            if (doAllCells) return;
+            if (!confirm('Geen cellen geselecteerd.\nAlle cellen aanpassen?')) return;
+            cells = getGraphCells(false);
+        }
+
+        graph.getModel().beginUpdate();
+        try {
+            for (var i = 0; i < cells.length; i++) {
+                var cell = cells[i];
+
+                if (graph.getModel().getChildCount(cell)) {
+                    graph.updateGroupBounds([cell], 20);
+                }
+                else {
+                    var state = graph.view.getState(cell);
+                    var geo = graph.getCellGeometry(cell);
+
+                    if (graph.getModel().isVertex(cell) && state != null && state.text != null && geo != null && graph.isWrapping(cell)) {
+                        geo = geo.clone();
+                        geo.height = (state.text.boundingBox.height + 2 * (state.style.spacing * graph.view.scale)) / graph.view.scale;
+                        graph.getModel().setGeometry(cell, geo);
+                    }
+                    else {
+                        graph.updateCellSize(cell);
+                    }
+                }
+            }
+        }
+        finally {
+            graph.getModel().endUpdate();
+        }
+    }
+
+    Q('#autoSize').onclick = () => autoSize();
+
+    //Auto arrange
+    Q('#vertical').onclick = function () {
+        autoSize(true);
+        mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.STRAIGHT;
+        var layout = new mxHierarchicalLayout(graph);
+        layout.execute(graph.getDefaultParent());
+    };
+
+    Q('#horizontal').onclick = function () {
+        autoSize(true);
+        mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.STRAIGHT;
+        var layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
+        layout.execute(graph.getDefaultParent());
+    };
+
+    Q('#organic').onclick = function () {
+        autoSize(true);
+        var layout = new mxFastOrganicLayout(graph);
+        layout.forceConstant = 120;
+        layout.execute(graph.getDefaultParent());
+    };
+
     //Graph events
     graph.getModel().addListener(mxEvent.CHANGE, function () {
         graphToXml();
@@ -392,7 +450,7 @@ window.onload = () => {
     });
 
     function removeAllOverlays() {
-        var cells = Object.keys(graph.getModel().cells).map(x => graph.getModel().cells[x]);
+        var cells = getGraphCells(true);
         cells.forEach(x => graph.removeCellOverlays(x));
     }
 
@@ -454,5 +512,13 @@ window.onload = () => {
         var item = getProcedureItem(cell.id);
         item.contents = Q('[contentEditable]', '#itemDesc').innerHTML;
         showJson();
+    };
+
+    //Play
+    Q('#play').onclick = function() {
+        localStorage.setItem('playproc', JSON.stringify(PROC));
+        var w = window.open('/play');
+        w.document.write('<iframe src="/player.html" style="width:100%;height:100%;border:0;"></iframe>');
+        w.document.close();
     };
 };

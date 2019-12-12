@@ -1,0 +1,2226 @@
+{
+    "id": 1858,
+    "title": "Boom: kappen",
+    "contents": "",
+    "nodes": [
+      {
+        "id": 5000,
+        "title": "Past de kapping in een bedrijf van agro-forestry op landbouwgrond?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 5001,
+            "title": "Ja",
+            "contents": "",
+            "target": 5004
+          },
+          {
+            "id": 5002,
+            "title": "Neen",
+            "contents": "",
+            "target": 5005
+          }
+        ]
+      },
+      {
+        "id": 1861,
+        "title": "Staat de boom/de bomen in bos?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1862,
+            "title": "Neen",
+            "contents": "",
+            "target": 1864
+          },
+          {
+            "id": 1863,
+            "title": "Ja",
+            "contents": "",
+            "target": 2146
+          }
+        ]
+      },
+      {
+        "id": 1864,
+        "title": "Staat de boom in het VEN?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1865,
+            "title": "Neen",
+            "contents": "",
+            "target": 1867
+          },
+          {
+            "id": 1866,
+            "title": "Ja",
+            "contents": "",
+            "target": 2067
+          }
+        ]
+      },
+      {
+        "id": 1867,
+        "title": "Staat de boom in een habitat waarvoor een SBZ is ingesteld? ",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1868,
+            "title": "Neen",
+            "contents": "",
+            "target": 1907
+          },
+          {
+            "id": 1869,
+            "title": "Ja",
+            "contents": "",
+            "target": 1870
+          }
+        ]
+      },
+      {
+        "id": 1870,
+        "title": "Voer  voortoets uit m.b.t. betekenisvolle aantasting SBZ",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1871,
+            "title": "",
+            "contents": "",
+            "target": 1872
+          }
+        ]
+      },
+      {
+        "id": 1872,
+        "title": "Sluit de voortoets elke kans op betekenisvolle aantasting uit?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1873,
+            "title": "Neen",
+            "contents": "",
+            "target": 1875
+          },
+          {
+            "id": 1874,
+            "title": "Ja",
+            "contents": "",
+            "target": 1881
+          }
+        ]
+      },
+      {
+        "id": 1875,
+        "title": "Laat passende beoordeling uitvoeren",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1876,
+            "title": "",
+            "contents": "",
+            "target": 1877
+          }
+        ]
+      },
+      {
+        "id": 1877,
+        "title": "Bestaat er een kans op betekenisvolle aantasting?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1878,
+            "title": "Ja",
+            "contents": "",
+            "target": 1880
+          },
+          {
+            "id": 1879,
+            "title": "Neen",
+            "contents": "",
+            "target": 1881
+          }
+        ]
+      },
+      {
+        "id": 1880,
+        "title": "Werk niet toegestaan tenzij betekenisvolle aantasting vermeden kan worden door opleggen van voorwaarden bij omgevingsvergunning SH of natuurvergunning",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1881,
+        "title": "Nagaan of het een hoogstammige boom is",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1882,
+            "title": "",
+            "contents": "",
+            "target": 1883
+          }
+        ]
+      },
+      {
+        "id": 1883,
+        "title": "Is het een hoogstammige boom? Min. 1m omtrek op 1m hoogte",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1884,
+            "title": "Ja",
+            "contents": "",
+            "target": 1886
+          },
+          {
+            "id": 1885,
+            "title": "Neen",
+            "contents": "",
+            "target": 1897
+          }
+        ]
+      },
+      {
+        "id": 1886,
+        "title": "Vraag omgevingsvergunning SH aan bij CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1887,
+            "title": "",
+            "contents": "",
+            "target": 1888
+          }
+        ]
+      },
+      {
+        "id": 1888,
+        "title": "ANB-AVES brengt advies uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1889,
+            "title": "",
+            "contents": "",
+            "target": 1890
+          }
+        ]
+      },
+      {
+        "id": 1890,
+        "title": "In beschermd onroerend erfgoed: advies van agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1891,
+            "title": "",
+            "contents": "",
+            "target": 1892
+          }
+        ]
+      },
+      {
+        "id": 1892,
+        "title": "Verleent CBS omgevingsvergunning SH?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1893,
+            "title": "Neen",
+            "contents": "",
+            "target": 1895
+          },
+          {
+            "id": 1894,
+            "title": "Ja",
+            "contents": "",
+            "target": 1896
+          }
+        ]
+      },
+      {
+        "id": 1895,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1896,
+        "title": "Voer de kapping uit volgens de voorwaarden van de omgevingsvergunning SH",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1897,
+        "title": "Vraag natuurvergunning aan bij CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1898,
+            "title": "",
+            "contents": "",
+            "target": 1899
+          }
+        ]
+      },
+      {
+        "id": 1899,
+        "title": "ANB-AVES brengt advies uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1900,
+            "title": "",
+            "contents": "",
+            "target": 1901
+          }
+        ]
+      },
+      {
+        "id": 1901,
+        "title": "In beschermd onroerend erfgoed: advies van agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1902,
+            "title": "",
+            "contents": "",
+            "target": 1903
+          }
+        ]
+      },
+      {
+        "id": 1903,
+        "title": "Verleent CBS natuurvergunning?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1904,
+            "title": "Ja",
+            "contents": "",
+            "target": 1906
+          },
+          {
+            "id": 1905,
+            "title": "Neen",
+            "contents": "",
+            "target": 1895
+          }
+        ]
+      },
+      {
+        "id": 1906,
+        "title": "Voer de kapping uit volgens de voorwaarden van de natuurvergunning",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1907,
+        "title": "Staat de boom in een van de 'groene' of 'geelgroene' bestemmingen op de gewestplannen, of binnen Ramsargebied of binnen beschermd duingebied?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1908,
+            "title": "Ja",
+            "contents": "",
+            "target": 2028
+          },
+          {
+            "id": 1909,
+            "title": "Neen",
+            "contents": "",
+            "target": 1910
+          }
+        ]
+      },
+      {
+        "id": 1910,
+        "title": "Is de boom opgenomen in het beschermingsbesluit of beheerplan  van een beschermd cultuurhistorisch landschap,  stads- of dorpsgezicht of archeologische site?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1911,
+            "title": "Ja",
+            "contents": "",
+            "target": 1913
+          },
+          {
+            "id": 1912,
+            "title": "Neen",
+            "contents": "",
+            "target": 1961
+          }
+        ]
+      },
+      {
+        "id": 1913,
+        "title": "Is de kapping opgenomen en vrijgesteld van toelating OE in een goedgekeurd OE-beheerplan?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1914,
+            "title": "Ja",
+            "contents": "",
+            "target": 1916
+          },
+          {
+            "id": 1915,
+            "title": "Neen",
+            "contents": "",
+            "target": 1929
+          }
+        ]
+      },
+      {
+        "id": 1916,
+        "title": "Is het een hoogstammige boom? Min. 1m omtrek op 1m hoogte",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1917,
+            "title": "Ja",
+            "contents": "",
+            "target": 1919
+          },
+          {
+            "id": 1918,
+            "title": "Neen",
+            "contents": "",
+            "target": 1928
+          }
+        ]
+      },
+      {
+        "id": 1919,
+        "title": "Vraag omgevingsvergunning SH aan bij CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1920,
+            "title": "",
+            "contents": "",
+            "target": 1921
+          }
+        ]
+      },
+      {
+        "id": 1921,
+        "title": "CBS voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1922,
+            "title": "",
+            "contents": "",
+            "target": 1923
+          }
+        ]
+      },
+      {
+        "id": 1923,
+        "title": "Verleent CBS  omgevingsvergunning SH?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1924,
+            "title": "Neen",
+            "contents": "",
+            "target": 1926
+          },
+          {
+            "id": 1925,
+            "title": "Ja",
+            "contents": "",
+            "target": 1927
+          }
+        ]
+      },
+      {
+        "id": 1926,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1927,
+        "title": "Voer de kapping uit volgens de voorwaarden van de omgevingsvergunning SH",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1928,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1929,
+        "title": "Is het een hoogstammige boom? Min. 1m omtrek op 1m hoogte",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1930,
+            "title": "Ja",
+            "contents": "",
+            "target": 1932
+          },
+          {
+            "id": 1931,
+            "title": "Neen",
+            "contents": "",
+            "target": 1943
+          }
+        ]
+      },
+      {
+        "id": 1932,
+        "title": "Vraag omgevingsvergunning SH aan bij CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1933,
+            "title": "",
+            "contents": "",
+            "target": 1934
+          }
+        ]
+      },
+      {
+        "id": 1934,
+        "title": "CBS voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1935,
+            "title": "",
+            "contents": "",
+            "target": 1936
+          }
+        ]
+      },
+      {
+        "id": 1936,
+        "title": "Agentschap OE brengt advies uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1937,
+            "title": "",
+            "contents": "",
+            "target": 1938
+          }
+        ]
+      },
+      {
+        "id": 1938,
+        "title": "Verleent CBS omgevingsvergunning SH?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1939,
+            "title": "Ja",
+            "contents": "",
+            "target": 1942
+          },
+          {
+            "id": 1940,
+            "title": "Neen",
+            "contents": "",
+            "target": 1941
+          }
+        ]
+      },
+      {
+        "id": 1941,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1942,
+        "title": "Voer de kapping uit volgens de voorwaarden van de omgevingsvergunning SH",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1943,
+        "title": "Staat de boom in een beschermd stads- of dorpsgezicht?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1944,
+            "title": "Ja",
+            "contents": "",
+            "target": 1946
+          },
+          {
+            "id": 1945,
+            "title": "Neen",
+            "contents": "",
+            "target": 1951
+          }
+        ]
+      },
+      {
+        "id": 1946,
+        "title": "Meld de kapping aan het CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1947,
+            "title": "",
+            "contents": "",
+            "target": 1948
+          }
+        ]
+      },
+      {
+        "id": 1948,
+        "title": "Het CBS deelt binnen 20 d mee dat aanplanting wezenlijke eigenschappen van het stads- of dorpsgezicht verstoort ",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1949,
+            "title": "Neen",
+            "contents": "",
+            "target": 1960
+          },
+          {
+            "id": 1950,
+            "title": "Ja",
+            "contents": "",
+            "target": 1951
+          }
+        ]
+      },
+      {
+        "id": 1951,
+        "title": "Vraag toelating aan Agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1952,
+            "title": "",
+            "contents": "",
+            "target": 1953
+          }
+        ]
+      },
+      {
+        "id": 1953,
+        "title": "Agentschap OE voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1954,
+            "title": "",
+            "contents": "",
+            "target": 1955
+          }
+        ]
+      },
+      {
+        "id": 1955,
+        "title": "Verleent agentschap OE toelating?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1956,
+            "title": "Ja",
+            "contents": "",
+            "target": 1958
+          },
+          {
+            "id": 1957,
+            "title": "Neen",
+            "contents": "",
+            "target": 1959
+          }
+        ]
+      },
+      {
+        "id": 1958,
+        "title": "Voer de kapping uit volgens de voorwaarden van de toelating",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1959,
+        "title": "Werk niet toegestaan / Beroep mogelijk bij Vl. minister",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1960,
+        "title": "Voer de kapping uit",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1961,
+        "title": "Is de boom opgenomen in de vastgestelde inventaris van houtige beplantingen met erfgoedwaarde?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1962,
+            "title": "Ja",
+            "contents": "",
+            "target": 2013
+          },
+          {
+            "id": 1963,
+            "title": "Neen",
+            "contents": "",
+            "target": 1964
+          }
+        ]
+      },
+      {
+        "id": 1964,
+        "title": "Is het een hoogstammige boom? Min. 1m omtrek op 1m hoogte",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1965,
+            "title": "Ja",
+            "contents": "",
+            "target": 1967
+          },
+          {
+            "id": 1966,
+            "title": "Neen",
+            "contents": "",
+            "target": 2012
+          }
+        ]
+      },
+      {
+        "id": 1967,
+        "title": "Staat de boom in woongebied (geen woonpark), agrarisch gebied of industriegebied en binnen 15m van vergunde woning of bedrijfsgebouw?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1968,
+            "title": "Ja",
+            "contents": "",
+            "target": 1970
+          },
+          {
+            "id": 1969,
+            "title": "Neen",
+            "contents": "",
+            "target": 1983
+          }
+        ]
+      },
+      {
+        "id": 1970,
+        "title": "Heeft de gemeente een vergunningsplicht ingevoerd via een stedenbouwkundige verordening?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1971,
+            "title": "Neen",
+            "contents": "",
+            "target": 1973
+          },
+          {
+            "id": 1972,
+            "title": "Ja",
+            "contents": "",
+            "target": 1974
+          }
+        ]
+      },
+      {
+        "id": 1973,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1974,
+        "title": "Vraag omgevingsvergunning SH aan bij CBS ",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1975,
+            "title": "",
+            "contents": "",
+            "target": 1976
+          }
+        ]
+      },
+      {
+        "id": 1976,
+        "title": "CBS voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1977,
+            "title": "",
+            "contents": "",
+            "target": 1978
+          }
+        ]
+      },
+      {
+        "id": 1978,
+        "title": "CBS verleent omgevingsvergunning SH?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1979,
+            "title": "Neen",
+            "contents": "",
+            "target": 1981
+          },
+          {
+            "id": 1980,
+            "title": "Ja",
+            "contents": "",
+            "target": 1982
+          }
+        ]
+      },
+      {
+        "id": 1981,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1982,
+        "title": "Voer de kapping uit volgens de voorwaarden van de omgevingsvergunning SH",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1983,
+        "title": "Is de velling nodig wegens acuut gevaar?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1984,
+            "title": "Ja",
+            "contents": "",
+            "target": 1986
+          },
+          {
+            "id": 1985,
+            "title": "Neen",
+            "contents": "",
+            "target": 1999
+          }
+        ]
+      },
+      {
+        "id": 1986,
+        "title": "Is er een interventie van de brandweer?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1987,
+            "title": "Ja",
+            "contents": "",
+            "target": 1998
+          },
+          {
+            "id": 1988,
+            "title": "Neen",
+            "contents": "",
+            "target": 1989
+          }
+        ]
+      },
+      {
+        "id": 1989,
+        "title": "Vraag een voorafgaandelijke schriftelijke toelating van de burgemeester",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1990,
+            "title": "",
+            "contents": "",
+            "target": 1993
+          }
+        ]
+      },
+      {
+        "id": 1993,
+        "title": "Stemt de burgemeester in met kapping?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 1994,
+            "title": "Neen",
+            "contents": "",
+            "target": 1996
+          },
+          {
+            "id": 1995,
+            "title": "Ja",
+            "contents": "",
+            "target": 1997
+          }
+        ]
+      },
+      {
+        "id": 1996,
+        "title": "Werk niet toegestaan",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1997,
+        "title": "Voer de kapping uit volgens de onderrichtingen van de burgemeester",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1998,
+        "title": "De brandweer velt de boom (op gezag van de burgemeester)",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 1999,
+        "title": "Is de kapping  opgenomen in een goedgekeurd beheerplan?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2000,
+            "title": "Ja",
+            "contents": "",
+            "target": 2002
+          },
+          {
+            "id": 2001,
+            "title": "Neen",
+            "contents": "",
+            "target": 5000
+          }
+        ]
+      },
+      {
+        "id": 2002,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2003,
+        "title": "Vraag omgevingsvergunning SH aan bij CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2004,
+            "title": "",
+            "contents": "",
+            "target": 2005
+          }
+        ]
+      },
+      {
+        "id": 2005,
+        "title": "CBS voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2006,
+            "title": "",
+            "contents": "",
+            "target": 2007
+          }
+        ]
+      },
+      {
+        "id": 2007,
+        "title": "Verleent CBS omgevingsvergunning SH?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2008,
+            "title": "Neen",
+            "contents": "",
+            "target": 2010
+          },
+          {
+            "id": 2009,
+            "title": "Ja",
+            "contents": "",
+            "target": 2011
+          }
+        ]
+      },
+      {
+        "id": 2010,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2011,
+        "title": "Voer de kapping uit volgens de voorwaarden van de omgevingsvergunning SH",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2012,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2013,
+        "title": "Is het een hoogstammige boom? Min. 1m omtrek op 1m hoogte?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2014,
+            "title": "Ja",
+            "contents": "",
+            "target": 2016
+          },
+          {
+            "id": 2015,
+            "title": "Neen",
+            "contents": "",
+            "target": 2027
+          }
+        ]
+      },
+      {
+        "id": 2016,
+        "title": "Vraag omgevingsvergunning SH aan bij CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2017,
+            "title": "",
+            "contents": "",
+            "target": 2018
+          }
+        ]
+      },
+      {
+        "id": 2018,
+        "title": "CBS voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2019,
+            "title": "",
+            "contents": "",
+            "target": 2020
+          }
+        ]
+      },
+      {
+        "id": 2020,
+        "title": "Agentschap OE brengt advies uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2021,
+            "title": "",
+            "contents": "",
+            "target": 2022
+          }
+        ]
+      },
+      {
+        "id": 2022,
+        "title": "Verleent CBS omgevingsvergunning SH?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2023,
+            "title": "Ja",
+            "contents": "",
+            "target": 2025
+          },
+          {
+            "id": 2024,
+            "title": "Neen",
+            "contents": "",
+            "target": 2026
+          }
+        ]
+      },
+      {
+        "id": 2025,
+        "title": "Voer de kapping uit volgens de voorwaarden van de omgevingsvergunning SH",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2026,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2027,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2028,
+        "title": "Is het een hoogstammige boom?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2029,
+            "title": "Neen",
+            "contents": "",
+            "target": 2031
+          },
+          {
+            "id": 2030,
+            "title": "Ja",
+            "contents": "",
+            "target": 2054
+          }
+        ]
+      },
+      {
+        "id": 2031,
+        "title": "Staat de boom in een huiskavel en binnen 100 m (50 m in groene gebieden) van een vergunde en bewoonde woning/in gebruik zijnd bedrijfsgebouw?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2032,
+            "title": "Ja",
+            "contents": "",
+            "target": 2034
+          },
+          {
+            "id": 2033,
+            "title": "Neen",
+            "contents": "",
+            "target": 2035
+          }
+        ]
+      },
+      {
+        "id": 2034,
+        "title": "Voer het werk uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2035,
+        "title": "Is het werk opgenomen in een goedgekeurd beheerplan/project?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2036,
+            "title": "Ja",
+            "contents": "",
+            "target": 2034
+          },
+          {
+            "id": 2037,
+            "title": "Neen",
+            "contents": "",
+            "target": 2038
+          }
+        ]
+      },
+      {
+        "id": 2038,
+        "title": "Betreft het een normaal onderhoudswerk?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2039,
+            "title": "Ja",
+            "contents": "",
+            "target": 2034
+          },
+          {
+            "id": 2040,
+            "title": "Neen",
+            "contents": "",
+            "target": 2041
+          }
+        ]
+      },
+      {
+        "id": 2041,
+        "title": "Vraag natuurvergunning aan bij CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2042,
+            "title": "",
+            "contents": "",
+            "target": 2043
+          }
+        ]
+      },
+      {
+        "id": 2043,
+        "title": "CBS voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2044,
+            "title": "",
+            "contents": "",
+            "target": 2045
+          }
+        ]
+      },
+      {
+        "id": 2045,
+        "title": "ANB-AVES brengt advies uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2046,
+            "title": "",
+            "contents": "",
+            "target": 2047
+          }
+        ]
+      },
+      {
+        "id": 2047,
+        "title": "In beschermd onroerend erfgoed: advies agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2048,
+            "title": "",
+            "contents": "",
+            "target": 2049
+          }
+        ]
+      },
+      {
+        "id": 2049,
+        "title": "Verleent CBS natuurvergunning?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2050,
+            "title": "Neen",
+            "contents": "",
+            "target": 2052
+          },
+          {
+            "id": 2051,
+            "title": "Ja",
+            "contents": "",
+            "target": 2053
+          }
+        ]
+      },
+      {
+        "id": 2052,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2053,
+        "title": "Voer de kapping uit volgens de voorwaarden van de natuurvergunning",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2054,
+        "title": "Vraag stedenbouwkundige vergunning aan CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2055,
+            "title": "",
+            "contents": "",
+            "target": 2056
+          }
+        ]
+      },
+      {
+        "id": 2056,
+        "title": "ANB-AVES brengt advies uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2057,
+            "title": "",
+            "contents": "",
+            "target": 2058
+          }
+        ]
+      },
+      {
+        "id": 2058,
+        "title": "CBS voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2059,
+            "title": "",
+            "contents": "",
+            "target": 2060
+          }
+        ]
+      },
+      {
+        "id": 2060,
+        "title": "In beschermd onroerend erfgoed: advies agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2061,
+            "title": "",
+            "contents": "",
+            "target": 2062
+          }
+        ]
+      },
+      {
+        "id": 2062,
+        "title": "Verleent CBS stedenbouwkundige  vergunning?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2063,
+            "title": "Ja",
+            "contents": "",
+            "target": 2065
+          },
+          {
+            "id": 2064,
+            "title": "Neen",
+            "contents": "",
+            "target": 2066
+          }
+        ]
+      },
+      {
+        "id": 2065,
+        "title": "Voer kapping uit volgens voorwaarden vergunning",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2066,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2067,
+        "title": "Is het een hoogstammige boom? Min. 1m omtrek op 1m hoogte",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2068,
+            "title": "Ja",
+            "contents": "",
+            "target": 2070
+          },
+          {
+            "id": 2069,
+            "title": "Neen",
+            "contents": "",
+            "target": 2104
+          }
+        ]
+      },
+      {
+        "id": 2070,
+        "title": "Bestaat er een algemene ontheffing van verbod op vegetatiewijziging?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2071,
+            "title": "Ja",
+            "contents": "",
+            "target": 2073
+          },
+          {
+            "id": 2072,
+            "title": "Neen",
+            "contents": "",
+            "target": 2086
+          }
+        ]
+      },
+      {
+        "id": 2073,
+        "title": "Vraag stedenbouwkundige vergunning aan bij CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2074,
+            "title": "",
+            "contents": "",
+            "target": 2075
+          }
+        ]
+      },
+      {
+        "id": 2075,
+        "title": "CBS voert verscherpte natuurtoets uit ",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2076,
+            "title": "",
+            "contents": "",
+            "target": 2077
+          }
+        ]
+      },
+      {
+        "id": 2077,
+        "title": "In beschermd onroerend erfgoed: advies agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2078,
+            "title": "",
+            "contents": "",
+            "target": 2079
+          }
+        ]
+      },
+      {
+        "id": 2079,
+        "title": "In SBZ: voer voortoets uit i.v.m. betekenisvolle aantasting en advies ANB-AVES",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2080,
+            "title": "",
+            "contents": "",
+            "target": 2081
+          }
+        ]
+      },
+      {
+        "id": 2081,
+        "title": "Verleent CBS een stedenbouwkundige vergunning?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2082,
+            "title": "Ja",
+            "contents": "",
+            "target": 2084
+          },
+          {
+            "id": 2083,
+            "title": "Neen",
+            "contents": "",
+            "target": 2085
+          }
+        ]
+      },
+      {
+        "id": 2084,
+        "title": "Voer de kapping uit volgens de voorwaarden van de stedenbouwkundige vergunning",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2085,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2086,
+        "title": "Vraag stedenbouwkundige vergunning aan bij CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2087,
+            "title": "",
+            "contents": "",
+            "target": 2088
+          }
+        ]
+      },
+      {
+        "id": 2088,
+        "title": "CBS vraagt advies aan ANB- AVES",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2089,
+            "title": "",
+            "contents": "",
+            "target": 2090
+          }
+        ]
+      },
+      {
+        "id": 2090,
+        "title": "ANB voert verscherpte natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2091,
+            "title": "",
+            "contents": "",
+            "target": 2092
+          }
+        ]
+      },
+      {
+        "id": 2092,
+        "title": "In beschermd onroerend erfgoed:  advies agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2093,
+            "title": "",
+            "contents": "",
+            "target": 2094
+          }
+        ]
+      },
+      {
+        "id": 2094,
+        "title": "In SBZ: voer  voortoets uit i.v.m. betekenisvolle aantasting",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2095,
+            "title": "",
+            "contents": "",
+            "target": 2096
+          }
+        ]
+      },
+      {
+        "id": 2096,
+        "title": "Geeft ANB-AVES  positief advies?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2097,
+            "title": "Neen",
+            "contents": "",
+            "target": 2099
+          },
+          {
+            "id": 2098,
+            "title": "Ja",
+            "contents": "",
+            "target": 2100
+          }
+        ]
+      },
+      {
+        "id": 2099,
+        "title": "Werk niet toegestaan / beroep mogelijk bij deputatie",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2100,
+        "title": "Verleent CBS stedenbouwkundige vergunning?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2101,
+            "title": "Neen",
+            "contents": "",
+            "target": 2099
+          },
+          {
+            "id": 2102,
+            "title": "Ja",
+            "contents": "",
+            "target": 2103
+          }
+        ]
+      },
+      {
+        "id": 2103,
+        "title": "Voer de kapping uit volgens de voorwaarden van de stedenbouwkundige vergunning",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2104,
+        "title": "Bestaat er een algemene ontheffing van verbod op vegetatiewijziging?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2105,
+            "title": "Ja",
+            "contents": "",
+            "target": 2120
+          },
+          {
+            "id": 2106,
+            "title": "Neen",
+            "contents": "",
+            "target": 2107
+          }
+        ]
+      },
+      {
+        "id": 2107,
+        "title": "Vraag een individuele ontheffing aan bij  ANB-AVES",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2108,
+            "title": "",
+            "contents": "",
+            "target": 2109
+          }
+        ]
+      },
+      {
+        "id": 2109,
+        "title": "ANB voert verscherpte natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2110,
+            "title": "",
+            "contents": "",
+            "target": 2111
+          }
+        ]
+      },
+      {
+        "id": 2111,
+        "title": "In beschermd onroerend erfgoed: advies agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2112,
+            "title": "",
+            "contents": "",
+            "target": 2113
+          }
+        ]
+      },
+      {
+        "id": 2113,
+        "title": "In SBZ: voer voortoets uit i.v.m. betekenisvolle aantasting",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2114,
+            "title": "",
+            "contents": "",
+            "target": 2115
+          }
+        ]
+      },
+      {
+        "id": 2115,
+        "title": "Verleent ANB individuele ontheffing?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2116,
+            "title": "Neen",
+            "contents": "",
+            "target": 2118
+          },
+          {
+            "id": 2117,
+            "title": "Ja",
+            "contents": "",
+            "target": 2119
+          }
+        ]
+      },
+      {
+        "id": 2118,
+        "title": "Werk niet toegestaan",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2119,
+        "title": "Voer de kapping uit volgens de voorwaarden van de inividuele ontheffing",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2120,
+        "title": "Is de boom opgenomen in het beheerplan of beschermings-besluit van een beschermd cultuurhistorisch landschap, stads- of dorpsgezicht of acheologische site?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2121,
+            "title": "Neen",
+            "contents": "",
+            "target": 2123
+          },
+          {
+            "id": 2122,
+            "title": "Ja",
+            "contents": "",
+            "target": 2124
+          }
+        ]
+      },
+      {
+        "id": 2123,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2124,
+        "title": "Is de kapping opgenomen in  en vrijgesteld van toelating OE in een beheerplan OE?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2125,
+            "title": "Ja",
+            "contents": "",
+            "target": 2127
+          },
+          {
+            "id": 2126,
+            "title": "Neen",
+            "contents": "",
+            "target": 2128
+          }
+        ]
+      },
+      {
+        "id": 2127,
+        "title": "Voer het werk uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2128,
+        "title": "Staat de boom in een beschermd stads- of dorpsgezicht?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2129,
+            "title": "Ja",
+            "contents": "",
+            "target": 2131
+          },
+          {
+            "id": 2130,
+            "title": "Neen",
+            "contents": "",
+            "target": 2137
+          }
+        ]
+      },
+      {
+        "id": 2131,
+        "title": "Meld de kapping aan het CBS",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2132,
+            "title": "",
+            "contents": "",
+            "target": 2133
+          }
+        ]
+      },
+      {
+        "id": 2133,
+        "title": "Het CBS deelt binnen 20 d mee dat aanplanting wezenlijke eigenschappen van het stads- of dorpsgezicht verstoort ",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2134,
+            "title": "Ja",
+            "contents": "",
+            "target": 2137
+          },
+          {
+            "id": 2135,
+            "title": "Neen",
+            "contents": "",
+            "target": 2136
+          }
+        ]
+      },
+      {
+        "id": 2136,
+        "title": "Voer de kapping uit",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2137,
+        "title": "Vraag toelating aan Agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2138,
+            "title": "",
+            "contents": "",
+            "target": 2139
+          }
+        ]
+      },
+      {
+        "id": 2139,
+        "title": "Agentschap OE voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2140,
+            "title": "",
+            "contents": "",
+            "target": 2141
+          }
+        ]
+      },
+      {
+        "id": 2141,
+        "title": "Verleent agentschap OE toelating?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2142,
+            "title": "Ja",
+            "contents": "",
+            "target": 2145
+          },
+          {
+            "id": 2143,
+            "title": "Neen",
+            "contents": "",
+            "target": 2144
+          }
+        ]
+      },
+      {
+        "id": 2144,
+        "title": "Werk niet toegestaan / Beroep mogelijk bij Vl. minister",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2145,
+        "title": "Voer de kapping uit volgens de voorwaarden van de toelating",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2146,
+        "title": "Is de kapping opgenomen in een goedgekeurd beheerplan?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2147,
+            "title": "Ja",
+            "contents": "",
+            "target": 2184
+          },
+          {
+            "id": 2148,
+            "title": "Neen",
+            "contents": "",
+            "target": 2149
+          }
+        ]
+      },
+      {
+        "id": 2149,
+        "title": "Vraag een kapmachtiging aan ANB-AVES",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2150,
+            "title": "",
+            "contents": "",
+            "target": 2151
+          }
+        ]
+      },
+      {
+        "id": 2151,
+        "title": "Ligt het bos in VEN en/of SBZ?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2152,
+            "title": "Neen",
+            "contents": "",
+            "target": 2154
+          },
+          {
+            "id": 2153,
+            "title": "Ja",
+            "contents": "",
+            "target": 2163
+          }
+        ]
+      },
+      {
+        "id": 2154,
+        "title": "ANB-AVES voert  natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2155,
+            "title": "",
+            "contents": "",
+            "target": 2156
+          }
+        ]
+      },
+      {
+        "id": 2156,
+        "title": "Nagaan of ANB kapmachtiging verleent",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2157,
+            "title": "",
+            "contents": "",
+            "target": 2158
+          }
+        ]
+      },
+      {
+        "id": 2158,
+        "title": "Verleent ANB kapmachtiging?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2159,
+            "title": "Neen",
+            "contents": "",
+            "target": 2162
+          },
+          {
+            "id": 2160,
+            "title": "Ja",
+            "contents": "",
+            "target": 2161
+          }
+        ]
+      },
+      {
+        "id": 2161,
+        "title": "Voer de kapping uit volgens de voorwaarden van de kapmachtiging",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2162,
+        "title": "Werk niet toegestaan  /  beroep mogelijk bij Vl. minister",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2163,
+        "title": "Ligt het bos in VEN?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2164,
+            "title": "Ja",
+            "contents": "",
+            "target": 2166
+          },
+          {
+            "id": 2165,
+            "title": "Neen",
+            "contents": "",
+            "target": 2171
+          }
+        ]
+      },
+      {
+        "id": 2166,
+        "title": "ANB voert verscherpte natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2167,
+            "title": "",
+            "contents": "",
+            "target": 2168
+          }
+        ]
+      },
+      {
+        "id": 2168,
+        "title": "Ligt het bos ook in een habitat waarvoor een  SBZ is ingesteld?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2169,
+            "title": "Neen",
+            "contents": "",
+            "target": 2176
+          },
+          {
+            "id": 2170,
+            "title": "Ja",
+            "contents": "",
+            "target": 2171
+          }
+        ]
+      },
+      {
+        "id": 2171,
+        "title": "Voer  voortoets uit m.b.t. betekenisvolle  aantasting SBZ",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2172,
+            "title": "",
+            "contents": "",
+            "target": 2173
+          }
+        ]
+      },
+      {
+        "id": 2173,
+        "title": "Sluit de voortoets elke kans op betekenisvolle aantasting uit?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2174,
+            "title": "Ja",
+            "contents": "",
+            "target": 2176
+          },
+          {
+            "id": 2175,
+            "title": "Neen",
+            "contents": "",
+            "target": 2178
+          }
+        ]
+      },
+      {
+        "id": 2176,
+        "title": "In beschermd onroerend erfgoed: advies agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2177,
+            "title": "",
+            "contents": "",
+            "target": 2156
+          }
+        ]
+      },
+      {
+        "id": 2178,
+        "title": "Laat passende beoordeling uitvoeren",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2179,
+            "title": "",
+            "contents": "",
+            "target": 2180
+          }
+        ]
+      },
+      {
+        "id": 2180,
+        "title": "Bestaat er een kans op betekenisvolle aantasting?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2181,
+            "title": "Ja",
+            "contents": "",
+            "target": 2183
+          },
+          {
+            "id": 2182,
+            "title": "Neen",
+            "contents": "",
+            "target": 2176
+          }
+        ]
+      },
+      {
+        "id": 2183,
+        "title": "Werk niet toegestaan tenzij betekenisvolle aantasting vermeden kan worden door opleggen van voorwaarden bij de machtiging",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2184,
+        "title": "Is de boom opgenomen in het beheerplan onroerend erfgoed van een beschermd cultuurhistorisch landschap of archeologische site? ",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2185,
+            "title": "Neen",
+            "contents": "",
+            "target": 2187
+          },
+          {
+            "id": 2186,
+            "title": "Ja",
+            "contents": "",
+            "target": 2188
+          }
+        ]
+      },
+      {
+        "id": 2187,
+        "title": "Voer de kapping uit volgens de modaliteiten van het beheerplan en met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2188,
+        "title": "Vraag toelating aan agentschap OE",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2189,
+            "title": "",
+            "contents": "",
+            "target": 2190
+          }
+        ]
+      },
+      {
+        "id": 2190,
+        "title": "Agentschap OE voert natuurtoets uit",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2191,
+            "title": "",
+            "contents": "",
+            "target": 2192
+          }
+        ]
+      },
+      {
+        "id": 2192,
+        "title": "Verleent agentschap OE toelating?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 2193,
+            "title": "Ja",
+            "contents": "",
+            "target": 2195
+          },
+          {
+            "id": 2194,
+            "title": "Neen",
+            "contents": "",
+            "target": 2196
+          }
+        ]
+      },
+      {
+        "id": 2195,
+        "title": "Voer de kapping uit volgens de voorwaarden van de toelating",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 2196,
+        "title": "Werk niet toegestaan / beroep mogelijk bij Vl. minister",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 5004,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 5005,
+        "title": "Gebeurt de kapping door of op verzoek van de beheerder van boven- of ondergrondse leidingen?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 5006,
+            "title": "Ja",
+            "contents": "",
+            "target": 5008
+          },
+          {
+            "id": 5007,
+            "title": "Neen",
+            "contents": "",
+            "target": 5009
+          }
+        ]
+      },
+      {
+        "id": 5008,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 5009,
+        "title": "Gebeurt de kapping door of op verzoek van de spoorwegbeheerder?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 5010,
+            "title": "Ja",
+            "contents": "",
+            "target": 5012
+          },
+          {
+            "id": 5011,
+            "title": "Neen",
+            "contents": "",
+            "target": 5013
+          }
+        ]
+      },
+      {
+        "id": 5012,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      },
+      {
+        "id": 5013,
+        "title": "Staat de boom op openbaar domein en gebeurt  in de onmiddellijke omgeving een herplanting in het eerstvolgende plantseizoen?",
+        "contents": "",
+        "edges": [
+          {
+            "id": 5014,
+            "title": "Ja",
+            "contents": "",
+            "target": 5016
+          },
+          {
+            "id": 5015,
+            "title": "Neen",
+            "contents": "",
+            "target": 2003
+          }
+        ]
+      },
+      {
+        "id": 5016,
+        "title": "Voer de kapping uit met inachtneming van de zorgplicht",
+        "contents": "",
+        "edges": []
+      }
+    ]
+  }
