@@ -37,41 +37,41 @@ img.export {
     transition: all .3s;
 }
 
+.popup {
+    position: fixed;
+    z-index: 9999;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 80%;
+    max-width: 40%;
+    box-shadow: black 2px 2px 15px -5px;
+    border-radius: 10px;
+}
+
+.popup .close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    font-size: 40px;
+    transform: rotate(45deg);
+    line-height: 24px;
+}
+
 #drawing image:hover {
     opacity: 1;
 }
 
-#json, #xml {
-    overflow-y: auto;
-    font-family: monospace;
-    padding: 10px;
-    white-space: pre;
-    border: 0;
-    height: 100%;
-    width: 100%;
-    border: 2px solid #e6e6e6;
-    border-right: 0;
-}
-
-textarea {
-    resize: none;
-}
-
-[contentEditable] {
-    border: 1px solid darkgrey;
-    min-height: 150px;
-    padding: 5px;
-}
-
-button {
-    background: #d4e2ff;
-    padding: 6px 0;
-    cursor: pointer;
-    border: 0px solid #e6e6e6;
-    display: block;
-    width: 100px;
-    box-shadow: 1px 1px 0px 2px #333;
-}
+/*https://codepen.io/AlanCollins/pen/EwDar*/
+button {display: inline-block;margin-bottom: 0;text-align: center;text-transform: uppercase;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;padding: 6px 12px;border-radius: 3px;border: 1px solid transparent;text-decoration: none;user-select: none;font-size: 14px;color: #eceff1;border-color: transparent;background: #78909c;box-shadow: none;margin: 2px 0;}
+button:focus, button:active:focus { outline: thin dotted; outline: 5px auto -webkit-focus-ring-color; outline-offset: -2px; }
+button:hover, button:focus { text-decoration: none; color: #fff; border-color: transparent; color: #fff; background: #90a4ae; box-shadow: none; }
+button:active { outline: 0; background-image: none; border-color: #546e7a; color: #cfd8dc; background: #546e7a; box-shadow: none; }
 
 button.small {
     width: auto;
@@ -88,12 +88,37 @@ button.small {
     margin-top: 20px;
 }
 
-input,
+#json, #xml {
+    overflow-y: auto;
+    font-family: monospace;
+    padding: 10px;
+    white-space: pre;
+    height: 100%;
+    width: 100%;
+    border: 2px solid #78909c;
+    border-right: 0;
+    box-shadow: none;
+    background: #f1f1f1;
+    overflow: scroll;
+}
+
 textarea {
+    resize: none;
+}
+
+[contentEditable] {
+    min-height: 150px;
+}
+
+input, [contentEditable], textarea {
+    box-sizing: border-box;
+    border: 1px solid darkgrey;
     width: 100%;
     font-family: sans-serif;
     font-size: 14px;
     padding: 5px;
+    box-shadow: 3px 3px 0px #ccc;
+    background: white;
 }
 
 label {

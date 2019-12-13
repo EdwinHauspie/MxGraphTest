@@ -1,87 +1,56 @@
-let ProcedurePlayer = (function () {
-    class ProcedurePlayer {
-        constructor(el) {
-            this.el = el;
-            this.start();
-        }
+function createProcedurePlayer(P, layout) {
 
-        async start() {
-            let breadCrumb = [];
-            let pointer = null;
-            let P = localStorage.getItem('playproc') ? JSON.parse(localStorage.getItem('playproc')) : (await getJson(`/procedures/procedure1.json`));
-            let layout = await getText('/procedureplayer/layout1.html');
-
-            this.el.onclick = e => {
-                let cls = [...e.target.classList].filter(x => x.startsWith('goto'))[0];
-                if (cls) {
-                    navigateToNode(cls.replace('goto', ''));
-                    return false;
-                }
-            };
-
-            const navigateToNode = id => {
-                if (id == 0) {
-                    breadCrumb = [];
-                    pointer = null;
-                    setHtml(null, layout);
-                    setHtml('.title', P.title);
-                    setHtml('.contents', P.contents);
-                    setHtml('.edges', `<button class="goto${getEntryNode().id}">Start Procedure</button>`);
-                    return;
-                }
-
-                /*if (pointer) {
-                    breadCrumb[pointer].data = [...this.el.querySelectorAll('[name]')]
-                        .map(x => ({ k: x.getAttribute('name'), v: x.value }))
-                        .reduce((agg, x) => { agg[x.k] = x.v; return agg; }, {});
-                }*/
-
-                let node = P.nodes.filter(x => x.id == id)[0];
-
-                //if (!breadCrumb.includes(node)) {
-                    //if (pointer < breadCrumb.length - 1) {
-                        //if (!confirm('Weet je het zeker?')) return;
-                        //breadCrumb = breadCrumb.slice(0, pointer + 1);
-                    //}
-                    breadCrumb.push(node.id);
-                //}
-
-                let edgesHtml = arrayToHtml(node.edges, x => `<div><button class="goto${x.target}">${x.title || 'Volgende'}</button>${x.contents || ''}</div>`);
-                setHtml('.contents', `<h3>${node.title}</h3>${node.contents || ''}`);
-
-                /*if (node.data) {
-                    [...this.el.querySelectorAll('[name]')].forEach(x => {
-                        x.value = node.data[x.getAttribute('name')];
-                    });
-                }*/
-
-                setHtml('.edges', edgesHtml || '<b>Einde</b>');
-
-                //pointer = breadCrumb.indexOf(node);
-
-                let crumbHtml = `<ul>
-                    <li class="node"><a href="#" class="goto0">${P.title}</a></li>
-                    <li class="step">🡓</li>
-                    ${breadCrumb.map(x => P.nodes.filter(y => y.id == x)[0]).reduce((agg, x, i) => agg += `
-                        <li class="node"><!--a href="#" class="goto${x.id}"-->${x.title||''}<!--/a--></li>
-                        ${breadCrumb[i + 1] ? `<li class="step">${x.edges.filter(y => y.target == breadCrumb[i + 1])[0].title||''}</li>` : ''}`, '')}
-                </ul>`;
-                setHtml('.breadcrumb', crumbHtml);
-            };
-
-            const setHtml = (sel, html) => (sel ? this.el.querySelector(sel) : this.el).innerHTML = html;
-            const getEntryNode = () => {
-                let targets = P.nodes.reduce(function (agg, x) { return agg.concat((x.edges || []).map(y => y.target)); }, []);
-                return P.nodes.filter(x => !targets.includes(x.id))[0];
-            };
-            navigateToNode(0);
-        }
+    function arrayToHtml(arr, func) {
+        return (arr || []).reduce((agg, x) => (agg += func(x)), '');
     }
 
-    //Private methods
-    const getJson = async url => await fetch(url).then(r => r.json());
-    const getText = async url => await fetch(url).then(r => r.text());
-    const arrayToHtml = (arr, func) => (arr || []).reduce((agg, x) => (agg += func(x)), '');
+    //let breadCrumb = [];
+    const CONTAINER = document.createElement('div');
+    CONTAINER.innerHTML = layout;
 
-    return ProcedurePlayer;
-})();
+    function setHtml(sel, html) {
+        CONTAINER.querySelector(sel).innerHTML = html;
+    }
+
+    //Determine the first real node to display
+    let eligibleNodes = P.nodes.filter(x => !x.style); //Filter start/end nodes
+    let allEdges = eligibleNodes.reduce((agg, n) => agg.concat(n.edges || []), []);
+    let targetIds = allEdges.map(e => e.target);
+    let startNode = eligibleNodes.filter(n => !targetIds.includes(n.id));
+    if (startNode.length !== 1) {
+        setHtml('.title', 'Entrypoint error');
+        return CONTAINER;
+    }
+    else startNode = startNode[0];
+
+    setHtml('.title', P.title);
+    setHtml('.contents', P.contents);
+    setHtml('.edges', `<div class="edge"><button data-target="${startNode.id}">Start</button></div>`);
+
+    function navigateToNode(id) {
+        let node = P.nodes.find(x => x.id == id);
+        //breadCrumb.push(node.id);
+
+        let eligibleEdges = node.edges.filter(e => eligibleNodes.find(n => n.id == e.target)); //Don't keep edges pointing to end nodes
+        let edgesHtml = arrayToHtml(eligibleEdges, e => `<div class="edge"><button data-target="${e.target}">${e.title || 'Volgende'}</button><div>${e.contents || ''}</div></div>`);
+        setHtml('.contents', `<h3>${node.title}</h3>${node.contents || ''}`);
+        setHtml('.edges', edgesHtml || '<b>Einde</b>');
+
+        /*let crumbHtml = `<ul>
+            ${breadCrumb.map(x => PROCEDURE.nodes.filter(y => y.id == x)[0]).reduce((agg, x, i) => agg += `
+                <li class="node"><!--a href="#" class="goto${x.id}"-->${x.title || 'Volgende'}<!--/a--></li>
+                ${breadCrumb[i + 1] ? `<li class="step">${x.edges.filter(y => y.target == breadCrumb[i + 1])[0].title || 'Volgende'}</li>` : ''}`, '')}
+        </ul>`;
+
+        setHtml('.breadcrumb', crumbHtml);*/
+    }
+
+    CONTAINER.onclick = e => {
+        let nodeId = e.target.getAttribute('data-target');
+        if (!nodeId) return true;
+        navigateToNode(nodeId);
+        return false;
+    };
+
+    return CONTAINER;
+}

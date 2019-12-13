@@ -1,6 +1,6 @@
 {
     "title": "Bos aanplanten",
-    "contents": "<p><img src='https://www.knack.be/medias/13195/6756285.jpg' style='width: 300px;float: left;margin-right: 10px;'>Bedoeld wordt hier een zgn. eerste bebossing, dit is de bebossing van een terrein dat voordien niet met bos bezet was. (Het speelt geen rol dat dit in historische tijden wel het geval is geweest. Uiteindelijk kwamen duizenden jaren geleden op de meeste plaatsen in onze streken bossen voor.)</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>",
+    "contents": "<p>Bedoeld wordt hier een zgn. eerste bebossing, dit is de bebossing van een terrein dat voordien niet met bos bezet was. (Het speelt geen rol dat dit in historische tijden wel het geval is geweest. Uiteindelijk kwamen duizenden jaren geleden op de meeste plaatsen in onze streken bossen voor.)</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br><br><iframe width='400' height='250' src='https://www.youtube.com/embed/EkJBX_z7r9c?autoplay=1&controls=0&start=60' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'></iframe></p>",
     "layout": "layout1",
     "nodes": [
         {
@@ -11,7 +11,7 @@
                 {
                     "id": 2,
                     "title": "Ja",
-                    "contents": "<p><img src=\"https://media.tenor.com/images/15544c478d8847e25509b0ce3083663b/tenor.gif\" width='80px' /><img src=\"https://media.tenor.com/images/15544c478d8847e25509b0ce3083663b/tenor.gif\" width='80px' /><img src=\"https://media.tenor.com/images/15544c478d8847e25509b0ce3083663b/tenor.gif\" width='80px' /></p>",
+                    "contents": "",
                     "target": 5
                 },
                 {
@@ -44,7 +44,7 @@
         {
             "id": 6,
             "title": "Is het aan te planten bos gelegen in agrarisch gebied vlgs. gewestplan, RUP of PvA?",
-            "contents": "<p>De regeling die aan deze vraag ten grondslag ligt, maakt deel uit van het Veldwetboek. Dat gaat uit van ‘voor de landbouw bestemde gedeelten van het grondgebied’. Het Veldwetboek uit 1886 dateert van lang voor het tot stand komen van de ruimtelijke ordening, die de verschillende bestemmingen van het grondgebied heeft vastgelegd.<br><br><iframe width='400' height='250' src='https://www.youtube.com/embed/EkJBX_z7r9c?autoplay=1&controls=0&start=60' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'></iframe></p>",
+            "contents": "<p>De regeling die aan deze vraag ten grondslag ligt, maakt deel uit van het Veldwetboek. Dat gaat uit van ‘voor de landbouw bestemde gedeelten van het grondgebied’. Het Veldwetboek uit 1886 dateert van lang voor het tot stand komen van de ruimtelijke ordening, die de verschillende bestemmingen van het grondgebied heeft vastgelegd.</p>",
             "edges": []
         }
     ]

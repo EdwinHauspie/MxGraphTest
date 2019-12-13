@@ -12,8 +12,12 @@
 - [OK] import/scriptje maken van xcs "Boom: kappen"
 - [OK] autosize
 - [OK] remove points after auto arrange
+- [OK] knop om naar afspeelomgeving te gaan
+
+- savejson werkt nu niet meer ?
+- breadcrumb en navigatie daarin van de player
+- kijken wat er gebeurt als je een proceure wil afspelen met een groene start node ...
 - validatie (geen beginpunt + endless loop)
-- knop om naar afspeelomgeving te gaan
 
 - [ON HOLD] end node liquideren ?
 (- multi edit van props van nodes? ivm groups? grouping/folding/fases, mss in eerste instantie gewoon de ctrl-g van draw.io met kadertje errond ? nee, wel groups)*/
@@ -63,6 +67,7 @@ window.onload = () => {
         graph.setPanning(true);
         graph.setConnectable(true);
         graph.setAllowDanglingEdges(false);
+        graph.setCellsEditable(false); //Edit the labels via our custom properties pane
         //graph.setEdgeLabelsMovable(false);
         graph.setTooltips(false);
         graph.setCellsCloneable(false); //Prevent cloning cells by dragging them while holding down <ctrl>
@@ -203,7 +208,10 @@ window.onload = () => {
         Q('[contentEditable]', '#procDesc').innerHTML = PROC.contents;
     }
 
-    Q('#jsToXml').onclick = jsToXml;
+    Q('#jsToXml').onclick = function() {
+        PROC = JSON.parse(Q('#json').value);
+        jsToXml();
+    }
 
     //Convert graph to xml
     function graphToXml() {
@@ -232,7 +240,7 @@ window.onload = () => {
         xmlToGraph();
     };
 
-    Q('#saveJson').onclick = async function () {
+    Q('#saveJson').onclick = function () {
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(Q('#json').value));
         element.setAttribute('download', 'procedure1.json');
@@ -362,7 +370,7 @@ window.onload = () => {
             canvas.getContext('2d').drawImage(img, -1 * bounds.x, -1 * bounds.y);
             img2.src = canvas.toDataURL('image/png');
             img2.classList.add('export');
-            img2.onclick = function () { img2.style = ''; setTimeout(() =>Q('body').removeChild(img2), 500); };
+            img2.onclick = function () { img2.style = ''; setTimeout(() => Q('body').removeChild(img2), 500); };
             Q('body').appendChild(img2);
             setTimeout(() => {
                 img2.style = "opacity:1;transform: none;";
@@ -488,10 +496,18 @@ window.onload = () => {
         }
     });
 
-    Q('textarea', '#itemTitle').onfocus = function (e) {
-        graph.stopEditing();
+    //Procedure text fields
+    Q('textarea', '#procTitle').onkeyup = function (e) {
+        PROC.title = e.target.value;
+        showJson();
     };
 
+    Q('[contentEditable]', '#procDesc').onkeyup = function (e) {
+        PROC.contents = e.target.innerHTML;
+        showJson();
+    };
+
+    //Node text fields
     Q('textarea', '#itemTitle').onkeyup = function (e) {
         var newValue = graph.getSelectionCell().value = e.target.value;
         graph.getModel().beginUpdate();
@@ -500,25 +516,36 @@ window.onload = () => {
             var cell = graph.getSelectionCell();
             var edit = new mxCellAttributeChange(cell, 'value', newValue);
             graph.getModel().execute(edit);
-            //graph.updateCellSize(cell);
         }
         finally {
             graph.getModel().endUpdate();
         }
+
+        showJson();
     };
 
     Q('[contentEditable]', '#itemDesc').onkeyup = function (e) {
         var cell = graph.getSelectionCell();
         var item = getProcedureItem(cell.id);
-        item.contents = Q('[contentEditable]', '#itemDesc').innerHTML;
+        item.contents = e.target.innerHTML;
         showJson();
     };
 
     //Play
-    Q('#play').onclick = function() {
-        localStorage.setItem('playproc', JSON.stringify(PROC));
-        var w = window.open('/play');
-        w.document.write('<iframe src="/player.html" style="width:100%;height:100%;border:0;"></iframe>');
-        w.document.close();
+    function createElement(html) {
+        let div = document.createElement('div');
+        div.innerHTML = html.trim();
+        return div.firstChild; // Change this to div.childNodes to support multiple top-level nodes
+      }
+
+    Q('#play').onclick = async function() {
+        var popup = createElement('<div class="popup"></div>');
+        var layout =  await fetch('/procedureplayer/layout1.html').then(r => r.text());
+        var player = createProcedurePlayer(PROC, layout);
+        var close = createElement('<span class="close">+</span>');
+        close.onclick = () => Q('body').removeChild(popup);
+        Q('body').appendChild(popup);
+        popup.appendChild(close);
+        popup.appendChild(player);
     };
 };

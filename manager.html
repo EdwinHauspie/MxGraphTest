@@ -7,6 +7,7 @@
     <script src="/manager.js"></script>
     <script src="/proceduremanager/mxGraph/mxClient.js"></script>
     <script src="/proceduremanager/proceduremanager.js"></script>
+    <script src="/procedureplayer/procedureplayer.js"></script>
     <link rel="stylesheet" type="text/css" href="/manager.css">
 </head>
 
@@ -15,9 +16,9 @@
         <div class="luik" style="width:15%;">
             <textarea id="json" placeholder="JSON"></textarea>
 
-            <div style="position:absolute;right:20px;top:20px;">
+            <div style="position:absolute;right:25px;top:10px;text-align: right;">
                 <button class="enlarge">Enlarge</button>
-
+                <br>
                 <button id="loadJson">Load</button>
                 <button id="saveJson">Save</button>
             </div>
@@ -26,47 +27,49 @@
         <div class="luik" style="width:15%;">
             <textarea id="xml" placeholder="XML" re></textarea>
 
-            <div style="position:absolute;right:20px;top:20px;">
+            <div style="position:absolute;right:25px;top:10px;">
                 <button class="enlarge">Enlarge</button>
             </div>
 
-            <div style="position:absolute;left:-12px;top:45%;">
+            <div style="position:absolute;left: -27px;bottom: 50%;">
                 <button id="xmlToJs" class="small">⇇</button>
                 <button id="jsToXml" class="small">⇉</button>
             </div>
 
-            <div style="position:absolute;right:-12px;top:45%;z-index:2;">
+            <div style="position:absolute;right: -29px;bottom: 50%;z-index: 2;">
                 <button id="graphToXml" class="small">⇇</button>
                 <button id="xmlToGraph" class="small">⇉</button>
             </div>
         </div>
 
-        <div class="luik" style="width:55%;border:2px solid #e6e6e6;">
+        <div class="luik" style="width:55%;border:2px solid #78909c">
             <div id="drawing" tabindex="0"></div>
 
-            <div style="position:absolute;right:20px;top:20px;">
+            <div style="position:absolute;right:25px;top:10px;text-align: right;">
                 <button class="enlarge">Enlarge</button>
-
-                <div style="padding: 15px 30px;background: #fff;box-shadow: 1px 1px 0px 2px #333;">
-                    <button id="newNode" style="margin-bottom: 10px;cursor: move;background: #fff;border-radius: 8px;border: 1px solid grey;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;">                    </button>
-                    <button id="newStart" style="margin-bottom: 10px;cursor:move;background: #ffffff;border-radius: 70px;border: 2px solid #66cc00;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></button>
-                    <button id="newEnd" style="cursor:move;background: #ffffff;border-radius: 70px;border: 2px solid #ff6666;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;margin: 0;"></button>
-                </div>
-                <button id="horizontal">Arrange ⇉</button>
-                <button id="vertical">Arrange ⇊</button>
-                <button id="organic">Arrange ↺</button>
-                <button id="zoomIn">Zoom in</button>
-                <button id="zoomOut">Zoom out</button>
-                <button id="zoomReset">Zoom reset</button>
-                <button id="zoomFit">Zoom to fit</button>
-                <button id="autoSize">Auto size</button>
-                <button id="delete" style="background:#ffd4d4">Delete</button>
-                <button id="export">Export image</button>
-                <button id="play" style="background:#d7ffd4">Play</button>
+                <br>
+                <button id="autoSize">Autosize</button>
+                <button id="delete">Delete</button>
+                <br>
+                <button id="horizontal">⇉</button>
+                <button id="vertical">⇊</button>
+                <button id="organic">↺</button>
+                <br>
+                <button id="zoomIn">+</button>
+                <button id="zoomOut">-</button>
+                <button id="zoomReset">100%</button>
+                <button id="zoomFit">Fit</button>
+                <br>
+                <button id="export">Image</button>
+                <button id="play">Play</button>
+                <br>
+                <button id="newNode" style="cursor: move;background: #fff;border-radius: 8px;border: 1px solid grey;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></button>
+                <button id="newStart" style="cursor:move;background: #ffffff;border-radius: 70px;border: 2px solid #66cc00;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></button>
+                <button id="newEnd" style="cursor:move;background: #ffffff;border-radius: 70px;border: 2px solid #ff6666;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;margin: 0;"></button>
             </div>
         </div>
 
-        <div class="luik" style="width:15%;border:2px solid #e6e6e6;border-left:0;padding:10px;display: flex;flex-direction: column;">
+        <div class="luik" style="background:#f1f1f1;width:15%;border:2px solid #78909c;border-left:0;padding:10px;display: flex;flex-direction: column;">
             <div class="form-row" id="procTitle">
                 <label>Procedure title</label>
                 <textarea rows="3"></textarea>

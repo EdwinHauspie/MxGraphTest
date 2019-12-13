@@ -1,16 +1,20 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Open+Sans:400,600,700,800">
-    <script src="/procedureplayer/procedureplayer.js"></script>
+     <script src="/procedureplayer/procedureplayer.js"></script>
 </head>
 
-<body style="font-family: 'Nunito Sans',sans-serif;font-size: .9375rem;line-height: 1.6;color:#292d33;">
-    <div id="myPlayer" style="border: 1px solid gray;width:50%;box-shadow: 2px 2px 5px 0px #8c8c8c;">&nbsp;</div>
+<body>
+    <div></div>
 
-    <pre contenteditable style="border: 1px solid gray;width:50%;box-shadow: 2px 2px 5px 0px #8c8c8c;padding:10px;box-sizing: border-box;">new ProcedurePlayer(document.querySelector('#myPlayer'))</pre>
-
-    <button onclick="eval(document.getElementsByTagName('pre')[0].innerText)">Run Script</button>
+    <script>
+        (async function() {
+            var procedure = await fetch('/procedures/procedure1.json').then(r => r.json());
+            var layout =  await fetch('/procedureplayer/layout1.html').then(r => r.text());
+            var player = createProcedurePlayer(procedure, layout);
+            document.querySelector('div').appendChild(player);
+        })();
+    </script>
 </body>
 
 </html>
