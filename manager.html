@@ -4,10 +4,44 @@
     <script>
         window.mxBasePath = '/proceduremanager/mxGraph';
     </script>
-    <script src="/manager.js"></script>
     <script src="/proceduremanager/mxGraph/mxClient.js"></script>
     <script src="/proceduremanager/proceduremanager.js"></script>
     <script src="/procedureplayer/procedureplayer.js"></script>
+    <script>
+        function Q(selector, ctx) {
+            let results = [];
+
+            if (selector.nodeType) results.push(selector);
+            else if (selector instanceof Array) results = selector;
+            else {
+                if (!ctx) ctx = window.document;
+                else if (typeof ctx === 'string') ctx = window.document.querySelector(ctx);
+                results = [].slice.call(ctx.querySelectorAll(selector));
+            }
+
+            return results.length === 1 ? results[0] : results;
+        }
+
+        function isEmpty(obj) {
+            if (!obj) return true;
+            if (obj instanceof Array || typeof obj.length != 'undefined') return !obj.length;
+        }
+
+        function createElement(html) {
+            if (!html.startsWith('<')) return document.createElement(html);
+            let div = document.createElement('div');
+            div.innerHTML = html.trim();
+            return div.firstChild; //Change this to div.childNodes to support multiple top-level nodes
+        }
+
+        function createPopup() {
+            var popup = createElement('<div class="popup"></div>');
+            var close = createElement('<span class="close">+</span>');
+            close.onclick = () => popup.parentNode.removeChild(popup);
+            popup.appendChild(close);
+            return popup;
+        }
+    </script>
     <link rel="stylesheet" type="text/css" href="/manager.css">
 </head>
 
@@ -42,34 +76,36 @@
             </div>
         </div>
 
-        <div class="luik" style="width:55%;border:2px solid #78909c">
+        <div class="luik" style="width:55%;border:2px solid #78909c;overflow: scroll;">
             <div id="drawing" tabindex="0"></div>
-
-            <div style="position:absolute;right:25px;top:10px;text-align: right;">
-                <button class="enlarge">Enlarge</button>
-                <br>
-                <button id="autoSize">Autosize</button>
-                <button id="delete">Delete</button>
-                <br>
-                <button id="horizontal">⇉</button>
-                <button id="vertical">⇊</button>
-                <button id="organic">↺</button>
-                <br>
-                <button id="zoomIn">+</button>
-                <button id="zoomOut">-</button>
-                <button id="zoomReset">100%</button>
-                <button id="zoomFit">Fit</button>
-                <br>
-                <button id="export">Image</button>
-                <button id="play">Play</button>
-                <br>
-                <button id="newNode" style="cursor: move;background: #fff;border-radius: 8px;border: 1px solid grey;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></button>
-                <button id="newStart" style="cursor:move;background: #ffffff;border-radius: 70px;border: 2px solid #66cc00;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></button>
-                <button id="newEnd" style="cursor:move;background: #ffffff;border-radius: 70px;border: 2px solid #ff6666;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;margin: 0;"></button>
-            </div>
         </div>
 
-        <div class="luik" style="background:#f1f1f1;width:15%;border:2px solid #78909c;border-left:0;padding:10px;display: flex;flex-direction: column;">
+        <div style="position:absolute;right:calc(15% + 50px);top:15px;text-align:right;">
+            <button class="enlarge">Enlarge</button>
+            <br>
+            <button id="autoSize">Autosize</button>
+            <br>
+            <button id="delete">Delete</button>
+            <br>
+            <button id="horizontal">⇉</button>
+            <button id="vertical">⇊</button>
+            <button id="organic">↺</button>
+            <br>
+            <button id="zoomIn">+</button>
+            <button id="zoomOut">-</button>
+            <button id="zoomReset">100%</button>
+            <button id="zoomFit">Fit</button>
+            <br>
+            <button id="export">Image</button>
+            <br>
+            <button id="play">Play</button>
+            <br>
+            <span id="newNode" style="display: inline-block;cursor:move;background:#fff;border-radius: 8px;border: 1px solid grey;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></span>
+            <span id="newStart" style="display: inline-block;cursor:move;background:#fff;border-radius: 70px;border: 2px solid #66cc00;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></span>
+            <span id="newEnd" style="display: inline-block;cursor:move;background:#fff;border-radius: 70px;border: 2px solid #ff6666;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;margin: 0;"></span>
+        </div>
+
+        <div class="luik" style="background:#f1f1f1;width:15%;border:2px solid #78909c;border-left:0;padding:10px;display:flex;flex-direction:column;">
             <div class="form-row" id="procTitle">
                 <label>Procedure title</label>
                 <textarea rows="3"></textarea>

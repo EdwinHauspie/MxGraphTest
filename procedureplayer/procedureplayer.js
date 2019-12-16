@@ -1,55 +1,127 @@
 function createProcedurePlayer(P, layout) {
 
-    function arrayToHtml(arr, func) {
-        return (arr || []).reduce((agg, x) => (agg += func(x)), '');
+    //Create defaults and clean up
+    P.nodes = P.nodes || [];
+    P.nodes = P.nodes.filter(x => !x.style); //Nodes with a style are start or end nodes
+    P.contents = P.contents || '';
+    P.nodes.forEach(n => {
+        n.edges = n.edges || [];
+        n.contents = n.contents || '';
+        n.edges.forEach(e => {
+            e.title = e.title || 'Volgende';
+            e.contents = e.contents || '';
+        });
+    });
+
+    //Create layout/container
+    let layoutCreator = document.createElement('div');
+    layoutCreator.innerHTML = layout;
+    const CONTAINER = layoutCreator.firstChild;
+
+    function Q(selector) {
+        return CONTAINER.querySelector(selector);
     }
 
-    //let breadCrumb = [];
-    const CONTAINER = document.createElement('div');
-    CONTAINER.innerHTML = layout;
+    function getValidEdges(nodeId) { //Filter edges pointing to valid nodes
+        var node = P.nodes.find(x => x.id == nodeId);
+        if (!node) return [];
+        return node.edges.filter(e => P.nodes.find(n => n.id == e.target)).sort((a, b) => {
+            var nameA = a.title.toUpperCase(); // ignore upper and lowercase
+            var nameB = b.title.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+            return 0;
+        });
+    }
 
-    function setHtml(sel, html) {
-        CONTAINER.querySelector(sel).innerHTML = html;
+    function getEdge(sourceId, targetId) {
+        return getValidEdges(sourceId).find(e => e.target == targetId);
     }
 
     //Determine the first real node to display
-    let eligibleNodes = P.nodes.filter(x => !x.style); //Filter start/end nodes
-    let allEdges = eligibleNodes.reduce((agg, n) => agg.concat(n.edges || []), []);
+    let allEdges = P.nodes.reduce((agg, n) => agg.concat(getValidEdges(n.id)), []);
     let targetIds = allEdges.map(e => e.target);
-    let startNode = eligibleNodes.filter(n => !targetIds.includes(n.id));
-    if (startNode.length !== 1) {
-        setHtml('.title', 'Entrypoint error');
+    let startNodes = P.nodes.filter(n => !targetIds.includes(n.id));
+    if (startNodes.length !== 1) {
+        Q('h1').innerHTML = 'Error: Could not find single point of entry';
         return CONTAINER;
     }
-    else startNode = startNode[0];
+    let startNode = startNodes[0];
 
-    setHtml('.title', P.title);
-    setHtml('.contents', P.contents);
-    setHtml('.edges', `<div class="edge"><button data-target="${startNode.id}">Start</button></div>`);
+    //Check for endless loops
+    var paths = [];
+    function walk(node) {
 
-    function navigateToNode(id) {
-        let node = P.nodes.find(x => x.id == id);
-        //breadCrumb.push(node.id);
+    }
+    walk(startNode);
 
-        let eligibleEdges = node.edges.filter(e => eligibleNodes.find(n => n.id == e.target)); //Don't keep edges pointing to end nodes
-        let edgesHtml = arrayToHtml(eligibleEdges, e => `<div class="edge"><button data-target="${e.target}">${e.title || 'Volgende'}</button><div>${e.contents || ''}</div></div>`);
-        setHtml('.contents', `<h3>${node.title}</h3>${node.contents || ''}`);
-        setHtml('.edges', edgesHtml || '<b>Einde</b>');
+    if (false) {
+        Q('h1').innerHTML = 'Error: Endless loop detected';
+        return CONTAINER;
+    }
 
-        /*let crumbHtml = `<ul>
-            ${breadCrumb.map(x => PROCEDURE.nodes.filter(y => y.id == x)[0]).reduce((agg, x, i) => agg += `
-                <li class="node"><!--a href="#" class="goto${x.id}"-->${x.title || 'Volgende'}<!--/a--></li>
-                ${breadCrumb[i + 1] ? `<li class="step">${x.edges.filter(y => y.target == breadCrumb[i + 1])[0].title || 'Volgende'}</li>` : ''}`, '')}
-        </ul>`;
+    let breadCrumb = [],
+        bcPointer = -1;
 
-        setHtml('.breadcrumb', crumbHtml);*/
+    Q('h1').innerHTML = P.title;
+    Q('.intro').innerHTML = P.contents + `<br><br><button data-target="${startNode.id}" onclick="this.parentNode.removeChild(this)">Procedure Starten</button>`;
+
+    function showNode(nodeId) {
+        CONTAINER.querySelector('.play').style = 'display:block;';
+
+        let node = P.nodes.find(x => x.id == nodeId);
+        Q('.node').innerHTML = `<h3>${node.title}</h3> ${node.contents}`;
+
+        let edges = getValidEdges(nodeId);
+        let edgesHtml = edges.map(e => `<div class="edge"><button data-target="${e.target}">${e.title}</button><div>${e.contents}</div></div>`);
+        Q('.edges').innerHTML = edgesHtml.join('') || '<b>Einde</b>';
+    }
+
+    function renderBreadCrumb() {
+        let crumbHtml = breadCrumb.map(function (id, i) {
+            var node = P.nodes.find(x => x.id == id);
+            var nodeHtml = `<a href="javascript:void(0);" data-crumb="${i}">${node.title}</a>`;
+            var edgeHtml = '';
+            if (breadCrumb[i + 1]) {
+                edgeHtml = `<b>${getEdge(id, breadCrumb[i + 1]).title}</b>`;
+            }
+            return `<div ${i > bcPointer ? 'style="opacity:.3"' : ''}">${nodeHtml} ${edgeHtml}</div>`;
+        });
+
+        Q('.breadcrumb').innerHTML = crumbHtml.join('');
+    }
+
+    function gotoNode(nodeId) {
+        if (bcPointer < breadCrumb.length - 1) //When the breadcrumb pointer is not pointing to the last item
+            breadCrumb = breadCrumb.slice(0, bcPointer + 1);
+
+        breadCrumb.push(nodeId);
+        bcPointer = breadCrumb.length - 1;
+
+        showNode(nodeId);
+        renderBreadCrumb();
+    }
+
+    function gotoCrumb(index) {
+        var nodeId = breadCrumb[index];
+        showNode(nodeId);
+        bcPointer = index;
+        renderBreadCrumb();
     }
 
     CONTAINER.onclick = e => {
         let nodeId = e.target.getAttribute('data-target');
-        if (!nodeId) return true;
-        navigateToNode(nodeId);
-        return false;
+        let crumb = e.target.getAttribute('data-crumb');
+
+        if (nodeId) {
+            gotoNode(nodeId);
+            return false;
+        } else if (crumb) {
+            gotoCrumb(parseInt(crumb, 10));
+            return false;
+        }
+
+        return true;
     };
 
     return CONTAINER;

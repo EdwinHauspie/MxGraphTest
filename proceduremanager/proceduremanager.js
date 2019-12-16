@@ -208,7 +208,7 @@ window.onload = () => {
         Q('[contentEditable]', '#procDesc').innerHTML = PROC.contents;
     }
 
-    Q('#jsToXml').onclick = function() {
+    Q('#jsToXml').onclick = function () {
         PROC = JSON.parse(Q('#json').value);
         jsToXml();
     }
@@ -241,13 +241,11 @@ window.onload = () => {
     };
 
     Q('#saveJson').onclick = function () {
-        var element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(Q('#json').value));
-        element.setAttribute('download', 'procedure1.json');
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
+        var href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(PROC));
+        var downloadLink = createElement(`<a style="display:none;" href="${href}" download="myProcedure.json"></a>`);
+        Q('body').appendChild(downloadLink);
+        downloadLink.click();
+        Q('body').removeChild(downloadLink);
     };
 
     //Panels enlarge
@@ -270,23 +268,14 @@ window.onload = () => {
         }
     };
 
-    var dragEl1 = document.createElement('div');
-    dragEl1.style.border = 'dashed grey 1px';
-    dragEl1.style.width = '140px';
-    dragEl1.style.height = '80px';
-    dragEl1.style.borderRadius = '10px';
-
+    var dragEl1 = createElement('<div style="border:dashed grey 1px;width:140px;height:80px;border-radius:10px;"></div>');
     var dragSource1 = mxUtils.makeDraggable(Q('#newNode'), () => graph, (graph, evt, target, x, y) => afterDrag('node', target, x, y), dragEl1, null, null, graph.autoscroll, true);
     dragSource1.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
     //Drag new start/end node
-    var dragEl2 = document.createElement('div');
-    dragEl2.style.border = 'dashed grey 2px';
-    dragEl2.style.width = dragEl2.style.height = dragEl2.style.borderRadius = '40px';
-
+    var dragEl2 = createElement('<div style="border:dashed grey 2px;width:40px;height:40px;border-radius:40px;"></div>');
     var dragSource2 = mxUtils.makeDraggable(Q('#newStart'), () => graph, (graph, evt, target, x, y) => afterDrag('start', target, x, y), dragEl2, null, null, graph.autoscroll, true);
     dragSource2.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
-
     var dragSource3 = mxUtils.makeDraggable(Q('#newEnd'), () => graph, (graph, evt, target, x, y) => afterDrag('end', target, x, y), dragEl2, null, null, graph.autoscroll, true);
     dragSource3.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
@@ -306,14 +295,6 @@ window.onload = () => {
         overlay2.offset = new mxPoint(-12, 0);
         overlay2.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { addChild(graph, cell, true); }));
         graph.addCellOverlay(cell, overlay2);
-
-        /*var overlay3 = new mxCellOverlay(new mxImage(resourcePath + 'delete.png', 16, 16), 'Verwijderen');
-        overlay3.cursor = 'hand';
-        overlay3.offset = new mxPoint(12, 14);
-        overlay3.align = mxConstants.ALIGN_LEFT;
-        overlay3.verticalAlign = mxConstants.ALIGN_TOP;
-        overlay3.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { deleteSubtree(graph, cell); }));
-        graph.addCellOverlay(cell, overlay3);*/
     }
 
     function addChild(graph, cell, horizontal) {
@@ -359,22 +340,17 @@ window.onload = () => {
         graph.clearSelection();
         var bounds = graph.getGraphBounds();
 
-        var svg = document.querySelector('svg');
-        var img = document.createElement('img');
-        var img2 = document.createElement('img');
-        var canvas = document.createElement('canvas');
-        canvas.width = bounds.width;
-        canvas.height = bounds.height;
+        var svg = Q('svg');
+        var img = createElement('img');
+        var img2 = createElement('img');
+        var canvas = createElement(`<canvas width="${bounds.width}" height="${bounds.height}"></canvas>`);
 
         img.onload = function () {
             canvas.getContext('2d').drawImage(img, -1 * bounds.x, -1 * bounds.y);
             img2.src = canvas.toDataURL('image/png');
-            img2.classList.add('export');
-            img2.onclick = function () { img2.style = ''; setTimeout(() => Q('body').removeChild(img2), 500); };
-            Q('body').appendChild(img2);
-            setTimeout(() => {
-                img2.style = "opacity:1;transform: none;";
-            }, 100);
+            var popup = createPopup();
+            popup.append(img2);
+            Q('body').appendChild(popup);
         }
 
         var xml = new XMLSerializer().serializeToString(svg);
@@ -532,20 +508,12 @@ window.onload = () => {
     };
 
     //Play
-    function createElement(html) {
-        let div = document.createElement('div');
-        div.innerHTML = html.trim();
-        return div.firstChild; // Change this to div.childNodes to support multiple top-level nodes
-      }
-
-    Q('#play').onclick = async function() {
-        var popup = createElement('<div class="popup"></div>');
-        var layout =  await fetch('/procedureplayer/layout1.html').then(r => r.text());
-        var player = createProcedurePlayer(PROC, layout);
-        var close = createElement('<span class="close">+</span>');
-        close.onclick = () => Q('body').removeChild(popup);
-        Q('body').appendChild(popup);
-        popup.appendChild(close);
+    Q('#play').onclick = async function () {
+        var layout = await fetch('/procedureplayer/layout1.html').then(r => r.text());
+        var procedure = JSON.parse(JSON.stringify(PROC)); //Deep copy
+        var player = createProcedurePlayer(procedure, layout);
+        var popup = createPopup();
         popup.appendChild(player);
+        Q('body').appendChild(popup);
     };
 };
