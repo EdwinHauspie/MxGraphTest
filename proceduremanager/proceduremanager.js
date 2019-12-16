@@ -281,6 +281,8 @@ window.onload = () => {
 
     //Overlays
     function addOverlays(cell) {
+        if ((cell.style||'').includes('ellipse')) return;
+
         var overlay1 = new mxCellOverlay(new mxImage(resourcePath + 'new2.png', 16, 16), 'Nieuwe stap');
         overlay1.cursor = 'hand';
         overlay1.align = mxConstants.ALIGN_CENTER;

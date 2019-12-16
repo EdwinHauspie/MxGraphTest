@@ -1,16 +1,29 @@
 function createProcedurePlayer(P, layout) {
 
-    //Create defaults and clean up
+    //Clean up the procedure and create defaults
+    P.title = P.title || 'Untitled procedure';
     P.nodes = P.nodes || [];
     P.nodes = P.nodes.filter(x => !x.style); //Nodes with a style are start or end nodes
     P.contents = P.contents || '';
     P.nodes.forEach(n => {
         n.edges = n.edges || [];
         n.contents = n.contents || '';
+
         n.edges.forEach(e => {
             e.title = e.title || 'Volgende';
             e.contents = e.contents || '';
         });
+
+        n.edges = n.edges.sort((a, b) => {
+            var nameA = a.title.toUpperCase(); //Ignore upper and lowercase
+            var nameB = b.title.toUpperCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+            return 0;
+        });
+
+        //Remove edges that don't point to any of the (cleaned up) nodes
+        n.edges = n.edges.filter(e => P.nodes.find(n => n.id == e.target));
     });
 
     //Create layout/container
@@ -22,44 +35,36 @@ function createProcedurePlayer(P, layout) {
         return CONTAINER.querySelector(selector);
     }
 
-    function getValidEdges(nodeId) { //Filter edges pointing to valid nodes
-        var node = P.nodes.find(x => x.id == nodeId);
-        if (!node) return [];
-        return node.edges.filter(e => P.nodes.find(n => n.id == e.target)).sort((a, b) => {
-            var nameA = a.title.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.title.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) return -1;
-            if (nameA > nameB) return 1;
-            return 0;
-        });
-    }
-
     function getEdge(sourceId, targetId) {
-        return getValidEdges(sourceId).find(e => e.target == targetId);
+        var node = P.nodes.find(x => x.id == sourceId);
+        return node.edges.find(e => e.target == targetId);
     }
 
-    //Determine the first real node to display
-    let allEdges = P.nodes.reduce((agg, n) => agg.concat(getValidEdges(n.id)), []);
+    //Check for unique entry node
+    let allEdges = P.nodes.reduce((agg, n) => agg.concat(n.edges), []);
     let targetIds = allEdges.map(e => e.target);
     let startNodes = P.nodes.filter(n => !targetIds.includes(n.id));
     if (startNodes.length !== 1) {
-        Q('h1').innerHTML = 'Error: Could not find single point of entry';
+        Q('h1').innerHTML = 'Error: No find single point of entry';
         return CONTAINER;
     }
     let startNode = startNodes[0];
 
     //Check for endless loops
-    var paths = [];
-    function walk(node) {
+    let loop = false;
 
-    }
-    walk(startNode);
+    (function walk(node, path) {
+        path.push(node.id);
+        if (path.length > 1000) return (loop = true); //If path gets too long, we assume there is a endless loop
+        node.edges.map(e => P.nodes.find(n => n.id == e.target)).forEach(n => walk(n, path));
+    })(startNode, []);
 
-    if (false) {
+    if (loop) {
         Q('h1').innerHTML = 'Error: Endless loop detected';
         return CONTAINER;
     }
 
+    //Everything is OK, start showing the procedure
     let breadCrumb = [],
         bcPointer = -1;
 
@@ -72,8 +77,7 @@ function createProcedurePlayer(P, layout) {
         let node = P.nodes.find(x => x.id == nodeId);
         Q('.node').innerHTML = `<h3>${node.title}</h3> ${node.contents}`;
 
-        let edges = getValidEdges(nodeId);
-        let edgesHtml = edges.map(e => `<div class="edge"><button data-target="${e.target}">${e.title}</button><div>${e.contents}</div></div>`);
+        let edgesHtml = node.edges.map(e => `<div class="edge"><button data-target="${e.target}">${e.title}</button><div>${e.contents}</div></div>`);
         Q('.edges').innerHTML = edgesHtml.join('') || '<b>Einde</b>';
     }
 
