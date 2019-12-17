@@ -1,5 +1,4 @@
 /*
-
 - [OK] veldjes invullen / node selecteren en description invullen
 - [ON] printen to image/pdf
 - [OK] betere icons / hover state
@@ -13,14 +12,13 @@
 - [OK] autosize
 - [OK] remove points after auto arrange
 - [OK] knop om naar afspeelomgeving te gaan
-
-- savejson werkt nu niet meer ?
-- breadcrumb en navigatie daarin van de player
-- kijken wat er gebeurt als je een proceure wil afspelen met een groene start node ...
-- validatie (geen beginpunt + endless loop)
-
-- [ON HOLD] end node liquideren ?
-(- multi edit van props van nodes? ivm groups? grouping/folding/fases, mss in eerste instantie gewoon de ctrl-g van draw.io met kadertje errond ? nee, wel groups)*/
+- [OK] savejson werkt nu niet meer ?
+- [OK] breadcrumb en navigatie daarin van de player
+- [OK] validatie (geen beginpunt + endless loop)
+- [BUSY] groups/kadertjes
+- [TODO] bug met single entry point check
+- [TODO] scrollbars bekijken
+*/
 
 window.onload = () => {
     let M = mxClient;
@@ -34,15 +32,9 @@ window.onload = () => {
 
     function customDelete() {
         var cells = graph.getSelectionCells();
-
-        if (cells.length) {
-            if (confirm('De selectie wordt verwijderd.\nDoorgaan?'))
-                graph.removeCells();
-        }
-        else if (confirm('Geen cellen geselecteerd.\nAlle cellen verwijderen?')) {
-            graph.selectAll();
+        if (!cells.length) return;
+        if (confirm('De selectie wordt verwijderd.\nDoorgaan?'))
             graph.removeCells();
-        }
     }
 
     editor.addAction('customDelete', customDelete);
@@ -51,8 +43,19 @@ window.onload = () => {
     editor.setGraphContainer(container);
     window.graph = editor.graph; //TEMP (for testing, don't put in window scope)
 
+    function cellIsProcedureStep(cell) {
+        //Check if the cell is a real procedure step
+        if (!cell.style) return true;
+        if (cell.style.includes('ellipse')) return false; //Start or end points
+        if (cell.style.includes('dash')) return false; //Grouping boxes
+        return true;
+    }
+
     function getGraphCells(includeSpecials) {
-        return Object.keys(graph.getModel().cells).map(x => graph.getModel().cells[x]).filter(x => x.vertex && (includeSpecials || !(x.style || '').includes('ellipse')));
+        return Object
+            .keys(graph.getModel().cells)
+            .map(x => graph.getModel().cells[x])
+            .filter(x => x.vertex && (includeSpecials || cellIsProcedureStep(x)));
     }
 
     var origGraphFireMouseEvent = graph.fireMouseEvent;
@@ -105,7 +108,7 @@ window.onload = () => {
         style[mxConstants.STYLE_ROUNDED] = true;
         style[mxConstants.STYLE_ABSOLUTE_ARCSIZE] = true;
         style[mxConstants.STYLE_ARCSIZE] = 14;
-        style[mxConstants.STYLE_STROKECOLOR] = '#4d4d4d';
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000';
         style[mxConstants.STYLE_FILLCOLOR] = '#ffffff';
         style[mxConstants.STYLE_SPACING] = 15;
         style[mxConstants.STYLE_OVERFLOW] = 'visible'; //Important for autosize
@@ -114,7 +117,7 @@ window.onload = () => {
     })();
 
     //Convert xml to json
-    var PROC = { title: '', contents: '', nodes: [] };
+    var PROC = { title: '', contents: '', nodes: [], graph: '' };
 
     function getProcedureItem(id) {
         var allEdges = PROC.nodes.map(x => x.edges).reduce((arr, x) => arr = arr.concat(x), []);
@@ -125,18 +128,20 @@ window.onload = () => {
     var defaults = {
         start: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#66CC00;',
         end: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#FF6666;',
+        group: 'shadow=0;editable=0;rounded=0;dashed=1;dashPattern=1 1;strokeWidth=2;',
         nodeWidth: 140,
         nodeHeight: 80,
+        groupWidth: 300,
+        groupHeight: 180,
         nodeGeometry: '<mxGeometry x="40" y="40" width="140" height="80" as="geometry"/>',
         edgeGeometry: '<mxGeometry relative="1" as="geometry"/>'
     };
 
-    //var startGeometry = '<mxGeometry x="40" y="40" width="40" height="40" as="geometry"/>';
-    //var endGeometry = '<mxGeometry x="40" y="40" width="40" height="40" as="geometry"/>';
-
     function showJson() {
         Q('#json').value = JSON.stringify(PROC, (key, value) => { if (value !== null) return value }, '    ');
     }
+
+    showJson();
 
     function xmlToJs() {
         var doc = mxUtils.parseXml(Q('#xml').value.trim());
@@ -211,7 +216,7 @@ window.onload = () => {
     Q('#jsToXml').onclick = function () {
         PROC = JSON.parse(Q('#json').value);
         jsToXml();
-    }
+    };
 
     //Convert graph to xml
     function graphToXml() {
@@ -254,34 +259,51 @@ window.onload = () => {
         e.target.closest('.luik').style.width = '55%';
     });
 
-    //Drag a new node
+    //Drag new elements
     function afterDrag(type, target, x, y) {
-        var cell = new mxCell(type == 'node' ? 'Nieuwe stap' : null, new mxGeometry(0, 0, type == 'node' ? 140 : 40, type == 'node' ? 80 : 40));
+        var geometry = new mxGeometry(0, 0, defaults.nodeWidth, defaults.nodeHeight);
+        if (type == 'start') geometry = new mxGeometry(0, 0, 40, 40);
+        if (type == 'end') geometry = new mxGeometry(0, 0, 40, 40);
+        if (type == 'group') geometry = new mxGeometry(0, 0, defaults.groupWidth, defaults.groupHeight);
+
+        var cell = new mxCell(type == 'node' ? 'Nieuwe stap' : null, geometry);
         cell.vertex = true;
+
         if (type == 'start') cell.style = defaults.start;
         if (type == 'end') cell.style = defaults.end;
+        if (type == 'group') cell.style = defaults.group;
+
         var cells = graph.importCells([cell], x, y, target);
 
         if (cells != null && cells.length > 0) {
             graph.scrollCellToVisible(cells[0]);
             graph.setSelectionCells(cells);
+            if (type == 'group') {
+                graph.orderCells(true); //Send to background
+                cells[0].setConnectable(false);
+            }
         }
     };
 
-    var dragEl1 = createElement('<div style="border:dashed grey 1px;width:140px;height:80px;border-radius:10px;"></div>');
+    var dragEl1 = createElement(`<div style="border:solid #000000 1px;width:${defaults.nodeWidth}px;height:${defaults.nodeHeight}px;border-radius:10px;"></div>`);
     var dragSource1 = mxUtils.makeDraggable(Q('#newNode'), () => graph, (graph, evt, target, x, y) => afterDrag('node', target, x, y), dragEl1, null, null, graph.autoscroll, true);
     dragSource1.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
-    //Drag new start/end node
-    var dragEl2 = createElement('<div style="border:dashed grey 2px;width:40px;height:40px;border-radius:40px;"></div>');
+    var dragEl2 = createElement('<div style="border:solid #66CC00 2px;width:40px;height:40px;border-radius:40px;"></div>');
     var dragSource2 = mxUtils.makeDraggable(Q('#newStart'), () => graph, (graph, evt, target, x, y) => afterDrag('start', target, x, y), dragEl2, null, null, graph.autoscroll, true);
     dragSource2.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
-    var dragSource3 = mxUtils.makeDraggable(Q('#newEnd'), () => graph, (graph, evt, target, x, y) => afterDrag('end', target, x, y), dragEl2, null, null, graph.autoscroll, true);
+
+    var dragEl3 = createElement('<div style="border:solid #FF6666 2px;width:40px;height:40px;border-radius:40px;"></div>');
+    var dragSource3 = mxUtils.makeDraggable(Q('#newEnd'), () => graph, (graph, evt, target, x, y) => afterDrag('end', target, x, y), dragEl3, null, null, graph.autoscroll, true);
     dragSource3.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
+
+    var dragEl4 = createElement(`<div style="border:2px dotted black;width:${defaults.groupWidth}px;height:${defaults.groupHeight}px;"></div>`);
+    var dragSource4 = mxUtils.makeDraggable(Q('#newGroup'), () => graph, (graph, evt, target, x, y) => afterDrag('group', target, x, y), dragEl4, null, null, graph.autoscroll, true);
+    dragSource4.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
     //Overlays
     function addOverlays(cell) {
-        if ((cell.style||'').includes('ellipse')) return;
+        if (!cellIsProcedureStep(cell)) return;
 
         var overlay1 = new mxCellOverlay(new mxImage(resourcePath + 'new2.png', 16, 16), 'Nieuwe stap');
         overlay1.cursor = 'hand';
@@ -460,7 +482,7 @@ window.onload = () => {
         var cells = graph.getSelectionCells();
         var cell = cells[0];
 
-        if (cells.length === 1 && cell && !(cell.style || '').includes('ellipse')) {
+        if (cells.length === 1 && cell && cellIsProcedureStep(cell)) {
             Q('#itemTitle').style.display = '';
             Q('#itemDesc').style.display = '';
 
