@@ -5,22 +5,14 @@ body {
     font-size: 14px;
 }
 
-#drawing {
+#graphContainer {
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
        -khtml-user-select: none; /* Konqueror HTML */
          -moz-user-select: none; /* Old versions of Firefox */
           -ms-user-select: none; /* Internet Explorer/Edge */
-              user-select: none; /* Non-prefixed version, currently
-                                    supported by Chrome, Opera and Firefox */
-  }
+              user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
 
-.luik {
-    position: relative;
-    transition: .3s all;
-}
-
-.luik:nth-child(3) {
     background-position: -1px -1px;
     background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2UwZTBlMCIgb3BhY2l0eT0iMC4yIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=")
 }
@@ -28,36 +20,30 @@ body {
 .popup {
     position: fixed;
     z-index: 9999;
-    margin: auto;
     background: white;
     padding: 20px;
     top: 0;
     left: 0;
-    right: 0;
-    max-height: 80%;
-    max-width: 40%;
-    box-shadow: #696969 0px 0px 10px 0px;
-    border-radius: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    bottom: 0;
-}
-
-.popup > * {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 25px solid #78909c;
 }
 
 .popup .close {
     position: absolute;
-    right: 5px;
-    top: 5px;
+    right: 8px;
+    top: 10px;
     cursor: pointer;
-    font-size: 40px;
+    font-size: 50px;
     transform: rotate(45deg);
     line-height: 24px;
     color: #78909c;
 }
+
+pre { margin: 0; }
 
 /*https://codepen.io/AlanCollins/pen/EwDar*/
 button {display: inline-block;margin-bottom: 0;text-align: center;text-transform: uppercase;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;padding: 6px 12px;border-radius: 3px;border: 1px solid transparent;text-decoration: none;user-select: none;font-size: 14px;color: #eceff1;border-color: transparent;background: #78909c;box-shadow: none;margin: 2px 0;}
@@ -75,19 +61,6 @@ button.small {
     margin-top: 20px;
 }
 
-#json, #xml {
-    overflow-y: auto;
-    font-family: monospace;
-    padding: 10px;
-    white-space: pre;
-    height: 100%;
-    width: 100%;
-    border: 2px solid #78909c;
-    border-right: 0;
-    box-shadow: none;
-    background: #f1f1f1;
-    overflow: scroll;
-}
 
 textarea {
     resize: none;

@@ -47,66 +47,34 @@
 
 <body>
     <div style="display:flex;height: 100%;">
-        <div class="luik" style="width:15%;">
-            <textarea id="json" placeholder="JSON"></textarea>
-
-            <div style="position:absolute;right:25px;top:10px;text-align: right;">
-                <button class="enlarge">Enlarge</button>
-                <br>
-                <button id="loadJson">Load</button>
-                <button id="saveJson">Save</button>
-            </div>
+         <div style="flex:4;border:2px solid #78909c;overflow: scroll;">
+            <div id="graphContainer" tabindex="0"></div>
         </div>
 
-        <div class="luik" style="width:15%;">
-            <textarea id="xml" placeholder="XML" re></textarea>
-
-            <div style="position:absolute;right:25px;top:10px;">
-                <button class="enlarge">Enlarge</button>
-            </div>
-
-            <div style="position:absolute;left: -27px;bottom: 50%;">
-                <button id="xmlToJs" class="small">⇇</button>
-                <button id="jsToXml" class="small">⇉</button>
-            </div>
-
-            <div style="position:absolute;right: -29px;bottom: 50%;z-index: 2;">
-                <button id="graphToXml" class="small">⇇</button>
-                <button id="xmlToGraph" class="small">⇉</button>
-            </div>
+        <div style="position:absolute;left: 20px;bottom:80px;">
+            <span id="newStart" style="display:inline-block;cursor:move;background:#fff;border-radius: 70px;border: 2px solid #66cc00;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></span>
+            <span id="newNode" style="margin-left:10px;display:inline-block;cursor:move;background:#fff;border-radius: 8px;border: 1px solid black;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></span>
+            <span id="newGroup" style="margin-left:10px;display:inline-block;cursor:move;background:#fff;border: 2px dotted #777777;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></span>
+            <span id="newEnd" style="margin-left:10px;display:inline-block;cursor:move;background:#fff;border-radius: 70px;border: 2px solid #ff6666;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></span>
         </div>
 
-        <div class="luik" style="width:55%;border:2px solid #78909c;overflow: scroll;">
-            <div id="drawing" tabindex="0"></div>
-        </div>
-
-        <div style="position:absolute;right:calc(15% + 50px);top:15px;text-align:right;">
-            <button class="enlarge">Enlarge</button>
-            <br>
+        <div style="position:absolute;left:20px;bottom:35px;">
             <button id="autoSize">Autosize</button>
-            <br>
-            <button id="delete">Delete</button>
-            <br>
-            <button id="horizontal">⇉</button>
+            <button id="horizontal" style="margin-left: 13px;">⇉</button>
             <button id="vertical">⇊</button>
             <button id="organic">↺</button>
-            <br>
+            <button id="zoomOut" style="margin-left: 13px;">-</button>
             <button id="zoomIn">+</button>
-            <button id="zoomOut">-</button>
-            <button id="zoomReset">100%</button>
             <button id="zoomFit">Fit</button>
-            <br>
-            <button id="export">Image</button>
-            <br>
+            <button id="zoomReset">100%</button>
+            <button id="delete" style="margin-left: 13px;">Delete</button>
+            <button id="xml" style="margin-left: 13px;">Xml</button>
+            <button id="json">Json</button>
+            <button id="export" style="margin-left: 13px;">Image</button>
             <button id="play">Play</button>
-            <br>
-            <span id="newNode" style="display: inline-block;cursor:move;background:#fff;border-radius: 8px;border: 1px solid black;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></span>
-            <span id="newStart" style="display: inline-block;cursor:move;background:#fff;border-radius: 70px;border: 2px solid #66cc00;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;"></span>
-            <span id="newEnd" style="display: inline-block;cursor:move;background:#fff;border-radius: 70px;border: 2px solid #ff6666;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;margin: 0;"></span>
-            <span id="newGroup" style="display: inline-block;cursor:move;background:#fff;border: 2px dotted black;width: 40px;box-shadow: 3px 3px #e6e6e6;height: 40px;margin: 0;"></span>
         </div>
 
-        <div class="luik" style="background:#f1f1f1;width:15%;border:2px solid #78909c;border-left:0;padding:10px;display:flex;flex-direction:column;">
+        <div style="background:#f1f1f1;flex:1;border:2px solid #78909c;border-left:0;padding:10px;display:flex;flex-direction:column;">
             <div class="form-row" id="procTitle">
                 <label>Procedure title</label>
                 <textarea rows="3"></textarea>

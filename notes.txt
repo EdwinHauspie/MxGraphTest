@@ -1,3 +1,61 @@
+
+
+
+- [OK] veldjes invullen / node selecteren en description invullen
+- [ON] printen to image/pdf
+- [OK] betere icons / hover state
+- [OK] desc invullen van pijl lukt niet
+- [OK] nieuwe nodes: checken als er al 1 staat op die xy coordinaat
+- [OK] zoom knoppen
+- [OK] scroll bars
+- [OK] delete toets met warning
+- [OK] align new nodes with centers
+- [OK] import/json maken van xcs procedure (bvb "Boom kappen")
+- [OK] autosize
+- [OK] remove points after auto arrange
+- [OK] knop om naar afspeelomgeving te gaan
+- [OK] savejson werkt nu niet meer ?
+- [OK] breadcrumb en navigatie daarin van de player
+- [OK] validatie (geen beginpunt + endless loop)
+- [OK] groups/kadertjes
+
+- [BUSY] rework manager and js model
+
+- [TODO] paste json / load json file
+- [TODO] bug met single entry point check
+- [TODO] loop error herbekijken
+- [TODO] scrollbars herbekijken
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //Helper
     graph.convertValueToString = function (cell) {
         if (mxUtils.isNode(cell.value)) {

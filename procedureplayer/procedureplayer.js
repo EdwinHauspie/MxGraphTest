@@ -24,12 +24,10 @@ function createProcedurePlayer(P, layout) {
     //Clean up the procedure and create defaults
     P.title = P.title || 'Untitled Procedure';
     P.nodes = P.nodes || [];
-    //P.nodes = P.nodes.filter(x => !(x.style||'').includes('ellipse')); //Remove start/end nodes
     P.contents = P.contents || '';
     P.nodes.forEach(n => {
         n.contents = n.contents || '';
         n.title = (n.title || 'Untitled').trim();
-        //n.edges = (n.edges || []).filter(e => P.nodes.find(n => n.id == e.target)); //Remove edges that don't point to any of the (cleaned up) nodes
         n.edges.forEach(e => {
             e.title = (e.title || 'Next').trim();
             e.contents = e.contents || '';
@@ -38,17 +36,14 @@ function createProcedurePlayer(P, layout) {
     });
 
     //Check for unique entry node
-    let allEdges = P.nodes.reduce((agg, n) => agg.concat(n.edges), []);
-    let targetIds = allEdges.map(e => e.target);
-    let startNodes = P.nodes.filter(n => !targetIds.includes(n.id));
-    if (startNodes.length !== 1) {
+    if (P.nodes.filter(n => n.start).length !== 1) {
         Q('h1').innerHTML = 'Error: No single point of entry.';
         return CONTAINER;
     }
-    let startNode = startNodes[0];
+    let startNode = P.nodes.find(n => n.start);
 
     //Check for (endless) loop
-    let loop = null;
+    /*let loop = null;
 
     (function walk(node, path) {
         path.push(node.id);
@@ -62,7 +57,7 @@ function createProcedurePlayer(P, layout) {
         var node = P.nodes.find(x => x.id == mostSeenNode.id);
         Q('h1').innerHTML = `Error: Loop detected. (${node.title})`;
         return CONTAINER;
-    }
+    }*/
 
     //Show intro
     Q('h1').innerHTML = P.title;
