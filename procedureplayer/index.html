@@ -1,7 +1,7 @@
 <html>
 
 <head>
-     <script src="/procedureplayer/procedureplayer.js"></script>
+     <script src="procedureplayer.js"></script>
 </head>
 
 <body>
@@ -9,8 +9,8 @@
 
     <script>
         (async function() {
-            var procedure = await fetch('/procedures/procedure1.json').then(r => r.json());
-            var layout =  await fetch('/procedureplayer/layout1.html').then(r => r.text());
+            var procedure = await fetch('../procedures/bosaanplanten.json').then(r => r.json());
+            var layout =  await fetch('layout1.html').then(r => r.text());
             var player = createProcedurePlayer(procedure, layout);
             document.querySelector('div').appendChild(player);
         })();

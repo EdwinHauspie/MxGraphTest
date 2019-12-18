@@ -3,7 +3,7 @@ window.onload = () => {
     if (!M.isBrowserSupported()) return alert('Browser not supported.');
 
     //Setup and styling of graph and editor
-    var resourcePath = '/proceduremanager/mxGraph/resources/';
+    var resourcePath = 'mxGraph/resources/';
     var container = Q('#graphContainer');
     var config = mxUtils.load(resourcePath + 'keyhandler-commons.xml').getDocumentElement();
     var editor = new mxEditor(config);
@@ -20,18 +20,31 @@ window.onload = () => {
     editor.addAction('customDelete', customDelete);
     Q('#delete').onclick = function () { customDelete(); };
 
-    //For easy testing, following vars in window scope (todo: remove from window scope)
-    window.graph = editor.graph;
-    window.P = { title: '', contents: '', nodes: [], graph: '' };
-
-    //Method to check if a cell is a real procedure step
-    function cellIsProcedureStep(cell) {
-        if ((cell.style || '').includes('ellipse')) return false; //Start or end points
-        if ((cell.style || '').includes('dash')) return false; //Grouping boxes
-        return true;
+    //Nudge
+    function nudge(coord, direction) {
+        graph.getSelectionCells().forEach(c => c.geometry[coord] += direction * graph.gridSize);
+        graph.refresh();
+        updateProcedureFromGraph();
     }
 
-    //Replace an event to keep the graph container focused (which is better in some cases)
+    editor.addAction('nudgeLeft', function () { nudge('x', -1) });
+    editor.addAction('nudgeRight', function () { nudge('x', 1) });
+    editor.addAction('nudgeTop', function () { nudge('y', -1) });
+    editor.addAction('nudgeBottom', function () { nudge('y', 1) });
+
+    //For easy testing, following vars are in window scope (todo: remove from window scope)
+    window.graph = editor.graph;
+    window.P = { title: 'Untitled procedure', contents: '', nodes: [], graph: '' };
+
+    P.getItemById = function (id) {
+        var allEdges = P.nodes.map(x => x.edges || []).reduce((arr, x) => arr = arr.concat(x), []);
+        var allItems = P.nodes.concat(allEdges);
+        return allItems.find(x => x.id == id);
+    };
+
+    Q('textarea', '#procTitle').value = P.title;
+
+    //Replace an event to keep the graph container focused (which is better in some particular cases)
     var origGraphFireMouseEvent = graph.fireMouseEvent;
     graph.fireMouseEvent = function (evtName, me, sender) {
         if (evtName == mxEvent.MOUSE_DOWN) this.container.focus();
@@ -86,63 +99,27 @@ window.onload = () => {
     style[mxConstants.STYLE_FONTCOLOR] = '#000000';
     graph.getStylesheet().putDefaultVertexStyle(style);
 
-    //Some helpers
-    function getGraphCells(includeSpecials) {
-        return Object
-            .keys(graph.getModel().cells)
-            .map(x => graph.getModel().cells[x])
-            .filter(x => x.vertex && (includeSpecials || cellIsProcedureStep(x)));
-    }
-
-    function getProcedureItem(id) {
-        var allEdges = P.nodes.map(x => x.edges || []).reduce((arr, x) => arr = arr.concat(x), []);
-        var allItems = P.nodes.concat(allEdges);
-        return allItems.find(x => x.id == id);
-    }
-
     //Default geometry and style
     var defaults = {
-        startStyle: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#66CC00;',
-        endStyle: 'editable=0;resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#FF6666;',
-        groupStyle: 'shadow=0;editable=0;rounded=0;dashed=1;dashPattern=1 1;strokeWidth=2;strokeColor=#777777;',
+        startStyle: 'resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#66CC00;',
+        endStyle: 'resizable=0;shape=ellipse;perimeter=ellipsePerimeter;strokeWidth=2;strokeColor=#FF6666;',
+        groupStyle: 'shadow=0;rounded=0;dashed=1;dashPattern=1 2;strokeColor=#000000;',
         nodeWidth: 140,
         nodeHeight: 80,
         groupWidth: 300,
-        groupHeight: 180,
-        nodeGeometry: '<mxGeometry x="40" y="40" width="140" height="80" as="geometry"/>',
-        edgeGeometry: '<mxGeometry relative="1" as="geometry"/>'
+        groupHeight: 180
     };
 
-    //Import procedure json
-    /*function randomId() {
-        var c = 'abcdefghijklmnopqrstuvwxyz'.split('');
-        return c.map(x => c[Math.floor(Math.random() * 26)]).join('');
-    }
-
-    function jsToXml() {
-        var xml = '';
-
-        function restoreLineBreaks(val) {
-            return val.replace('\n', '&#xa;');
+    //Helper for (custom) type of cell
+    Object.defineProperty(mxCell.prototype, '_type', {
+        get: function () {
+            if (this.edge) return 'edge';
+            if ((this.style || '') == defaults.startStyle) return 'start';
+            if ((this.style || '') == defaults.endStyle) return 'end';
+            if ((this.style || '') == defaults.groupStyle) return 'group';
+            return 'node';
         }
-
-        P.nodes.forEach(n => {
-            xml += `<mxCell id="${n.id}" value="${restoreLineBreaks(n.title || '')}" style="${n.style || ''}" parent="1" vertex="1">${n.geometry || defaults.nodeGeometry}</mxCell>`;
-            (n.edges || []).forEach(e => (xml += `<mxCell id="${e.id || randomId()}" value="${restoreLineBreaks(e.title || '')}" parent="1" source="${n.id}" target="${e.target}" edge="1">${e.geometry || defaults.edgeGeometry}</mxCell>`));
-        });
-
-        var xmlDoc = mxUtils.parseXml(`<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>${xml}</root></mxGraphModel>`);
-        Q('#xml').value = mxUtils.getPrettyXml(xmlDoc.documentElement, '    ', '');
-        Q('textarea', '#procTitle').value = P.title;
-        Q('[contentEditable]', '#procDesc').innerHTML = P.contents;
-    }*/
-
-    //Convert xml to graph
-    /*function xmlToGraph() {
-        var xmlDoc = mxUtils.parseXml(Q('#xml').value);
-        var dec = new mxCodec(xmlDoc);
-        dec.decode(xmlDoc.documentElement, editor.graph.getModel());
-    }*/
+    });
 
     //Convert graph to xml
     function graphToXml(pretty) {
@@ -164,7 +141,7 @@ window.onload = () => {
     Q('#json').onclick = function () {
         var popup = createPopup();
         var json = JSON.stringify(P, null, '    ');
-        var pre = createElement('pre')
+        var pre = createElement('pre');
         pre.appendChild(document.createTextNode(json));
         popup.appendChild(pre);
         Q('body').appendChild(popup);
@@ -197,50 +174,48 @@ window.onload = () => {
         }
     };
 
-    var dragEl1 = createElement(`<div style="background:white;border:solid #000000 1px;width:${defaults.nodeWidth}px;height:${defaults.nodeHeight}px;border-radius:10px;"></div>`);
+    var dragEl1 = createElement(`<div style="box-sizing:border-box;border:solid #000 1px;width:${defaults.nodeWidth}px;height:${defaults.nodeHeight}px;border-radius:10px;"></div>`);
     var dragSource1 = mxUtils.makeDraggable(Q('#newNode'), () => graph, (graph, evt, target, x, y) => afterDrag('node', target, x, y), dragEl1, null, null, graph.autoscroll, true);
     dragSource1.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
-    var dragEl2 = createElement('<div style="background:white;border:solid #66CC00 2px;width:40px;height:40px;border-radius:40px;"></div>');
+    var dragEl2 = createElement('<div style="box-sizing:border-box;border:solid #66CC00 2px;width:40px;height:40px;border-radius:40px;"></div>');
     var dragSource2 = mxUtils.makeDraggable(Q('#newStart'), () => graph, (graph, evt, target, x, y) => afterDrag('start', target, x, y), dragEl2, null, null, graph.autoscroll, true);
     dragSource2.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
-    var dragEl3 = createElement('<div style="background:white;border:solid #FF6666 2px;width:40px;height:40px;border-radius:40px;"></div>');
+    var dragEl3 = createElement('<div style="box-sizing:border-box;border:solid #FF6666 2px;width:40px;height:40px;border-radius:40px;"></div>');
     var dragSource3 = mxUtils.makeDraggable(Q('#newEnd'), () => graph, (graph, evt, target, x, y) => afterDrag('end', target, x, y), dragEl3, null, null, graph.autoscroll, true);
     dragSource3.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
-    var dragEl4 = createElement(`<div style="background:white;border:2px dotted #777777;width:${defaults.groupWidth}px;height:${defaults.groupHeight}px;"></div>`);
+    var dragEl4 = createElement(`<div style="box-sizing:border-box;border:1px dotted #000;width:${defaults.groupWidth}px;height:${defaults.groupHeight}px;"></div>`);
     var dragSource4 = mxUtils.makeDraggable(Q('#newGroup'), () => graph, (graph, evt, target, x, y) => afterDrag('group', target, x, y), dragEl4, null, null, graph.autoscroll, true);
     dragSource4.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
     //Overlays
     function addOverlays(cell) {
-        if (!cellIsProcedureStep(cell)) return;
+        if (cell._type !== 'node') return;
 
-        var overlay1 = new mxCellOverlay(new mxImage(resourcePath + 'new2.png', 16, 16), '');
+        var overlay1 = new mxCellOverlay(new mxImage(resourcePath + 'new_bottom.png', 16, 16), '');
         overlay1.cursor = 'hand';
         overlay1.align = mxConstants.ALIGN_CENTER;
-        overlay1.offset = new mxPoint(0, -12);
+        overlay1.offset = new mxPoint(0, -13);
         overlay1.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { addChild(graph, cell); }));
         graph.addCellOverlay(cell, overlay1);
 
-        var overlay2 = new mxCellOverlay(new mxImage(resourcePath + 'new.png', 16, 16), '');
+        var overlay2 = new mxCellOverlay(new mxImage(resourcePath + 'new_right.png', 16, 16), '');
         overlay2.cursor = 'hand';
         overlay2.align = mxConstants.ALIGN_RIGHT;
         overlay2.verticalAlign = mxConstants.ALIGN_MIDDLE;
-        overlay2.offset = new mxPoint(-12, 0);
+        overlay2.offset = new mxPoint(-13, 0);
         overlay2.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { addChild(graph, cell, true); }));
         graph.addCellOverlay(cell, overlay2);
     }
 
     function addChild(graph, cell, horizontal) {
-        var model = graph.getModel();
-        var parent = graph.getDefaultParent();
-
         try {
-            model.beginUpdate();
+            graph.getModel().beginUpdate();
+            var parent = graph.getDefaultParent();
             var newCell = graph.insertVertex(parent, null, 'Step ' + (P.nodes.length + 1));
-            var geometry = model.getGeometry(newCell);
+            var geometry = graph.getModel().getGeometry(newCell);
 
             geometry.width = defaults.nodeWidth;
             geometry.height = defaults.nodeHeight;
@@ -254,9 +229,16 @@ window.onload = () => {
                 geometry.y = cell.geometry.y + cell.geometry.height + 80;
             }
 
-            //Make sure there is no node at those positions
-            function spn() { return getGraphCells().filter(x => x != newCell).find(x => x.geometry.x == geometry.x && x.geometry.y == geometry.y); };
-            var samePositionNode = spn();
+            //Make sure there is no node at position x,y
+            function spn() {
+                return graph
+                    .getChildCells()
+                    .filter(x => x._type == 'node')
+                    .filter(x => x != newCell)
+                    .find(x => x.geometry.x == geometry.x && x.geometry.y == geometry.y);
+            };
+
+            let samePositionNode = spn();
             while (samePositionNode) {
                 geometry.x += 20;
                 geometry.y += 20;
@@ -266,12 +248,12 @@ window.onload = () => {
             graph.insertEdge(parent, null, '', cell, newCell);
         }
         finally {
-            model.endUpdate();
+            graph.getModel().endUpdate();
         }
     }
 
     //Export to image/png
-    Q('#export').onclick = function () {
+    Q('#image').onclick = function () {
         graph.zoomActual();
         graph.clearSelection();
         var bounds = graph.getGraphBounds();
@@ -294,39 +276,82 @@ window.onload = () => {
         img.src = 'data:image/svg+xml;base64,' + btoa(xml);
     };
 
-    //Zooming
+    //Import json
+    Q('#import').onclick = async function () {
+        graph.selectAll();
+        graph.removeCells();
+
+        let p = await fetch('../procedures/boomkappen.json').then(r => r.json());
+        Q('textarea', '#procTitle').value = P.title = (p.title || '');
+        Q('[contentEditable]', '#procDesc').innerHTML = P.contents = (p.contents || '');
+
+        if (p.graph) {
+            let xDoc = mxUtils.parseXml(p.graph);
+            let codec = new mxCodec(xDoc);
+            codec.decode(xDoc.documentElement, graph.getModel());
+        } else {
+            //This is the scenario where a procedure has never been in the visual manager, thus having no graph data
+            try {
+                updateProcedureOnGraphChange = false;
+                graph.getModel().beginUpdate();
+                let parent = graph.getDefaultParent();
+                let inserts = {};
+
+                //TODO revert cell ids to the imported ids, or not important ??
+                p.nodes.forEach(n => {
+                    let c = graph.insertVertex(parent, null, n.title, 0, 0, defaults.nodeWidth, defaults.nodeHeight);
+                    inserts[n.id] = c;
+                });
+
+                p.nodes.forEach(n => {
+                    (n.edges || []).forEach(e => {
+                        let c1 = inserts[n.id];
+                        let c2 = inserts[e.target];
+                        graph.insertEdge(parent, null, e.title, c1, c2);
+                    });
+                });
+            }
+            finally {
+                graph.getModel().endUpdate();
+                autoSize(true);
+                Q('#horizontal').click();
+                updateProcedureOnGraphChange = true;
+                updateProcedureFromGraph();
+            }
+        }
+    };
+
+    //Zoom
     Q('#zoomReset').onclick = () => graph.zoomActual();
     Q('#zoomIn').onclick = () => graph.zoomIn();
     Q('#zoomOut').onclick = () => graph.zoomOut();
     Q('#zoomFit').onclick = () => graph.fit();
 
-    //Auto size
+    //Auto size (Borrowed from https://github.com/jgraph/drawio/blob/master/src/main/webapp/js/mxgraph/Actions.js)
     function autoSize(doAllCells) {
-        var cells = doAllCells ? getGraphCells(false) : graph.getSelectionCells();
+        var cells = graph.getSelectionCells();
+        if (doAllCells) cells = graph.getChildCells().filter(x => x._type == 'node');
         if (cells == null || !cells.length) return;
 
-        graph.getModel().beginUpdate();
         try {
-            for (var i = 0; i < cells.length; i++) {
-                var cell = cells[i];
+            graph.getModel().beginUpdate();
 
-                if (graph.getModel().getChildCount(cell)) {
-                    graph.updateGroupBounds([cell], 20);
+            cells.forEach(c => {
+                if (graph.getModel().getChildCount(c)) {
+                    graph.updateGroupBounds([c], 20);
                 }
                 else {
-                    var state = graph.view.getState(cell);
-                    var geo = graph.getCellGeometry(cell);
+                    var state = graph.view.getState(c);
+                    var geo = graph.getCellGeometry(c);
 
-                    if (graph.getModel().isVertex(cell) && state != null && state.text != null && geo != null && graph.isWrapping(cell)) {
+                    if (graph.getModel().isVertex(c) && state != null && state.text != null && geo != null && graph.isWrapping(c)) {
                         geo = geo.clone();
                         geo.height = (state.text.boundingBox.height + 2 * (state.style.spacing * graph.view.scale)) / graph.view.scale;
-                        graph.getModel().setGeometry(cell, geo);
+                        graph.getModel().setGeometry(c, geo);
                     }
-                    else {
-                        graph.updateCellSize(cell);
-                    }
+                    else graph.updateCellSize(c);
                 }
-            }
+            });
         }
         finally {
             graph.getModel().endUpdate();
@@ -360,57 +385,34 @@ window.onload = () => {
     //Graph events
     function updateProcedureFromGraph() {
         P.graph = graphToXml();
+        let cells = graph.getChildCells();
 
-        var xDoc = mxUtils.parseXml(P.graph);
-        var allGraphItems = [...xDoc.documentElement.getElementsByTagName('mxCell')];
-        var nodeCells = allGraphItems.filter(c => c.getAttribute('vertex'));
-        var edgeCells = allGraphItems.filter(c => c.getAttribute('edge'));
-
-        function attributesToObject(xmlElement) {
-            return xmlElement ? [...xmlElement.attributes]
-                .map(y => ({ k: y.name, v: y.value }))
-                .reduce((agg, z) => { agg[z.k] = z.v; return agg; }, {})
-                : null;
-        }
-
-        nodeCells = nodeCells.map(attributesToObject);
-        edgeCells = edgeCells.map(attributesToObject);
-
-        function isNodeReferencedByStartNode(cell) {
-            let incomingEdges = edgeCells.filter(e => e.target == cell.id);
-            let incomingNodeIds = incomingEdges.map(e => e.source);
-            let incomingNodes = nodeCells.filter(x => incomingNodeIds.includes(x.id));
-            return !!incomingNodes.filter(x => x.style == defaults.startStyle).length;
-        }
-
-        P.nodes = nodeCells
-            .filter(cellIsProcedureStep)
-            .map(n => ({
-                id: n.id,
-                title: n.value || null,
-                start: isNodeReferencedByStartNode(n),
-                contents: (getProcedureItem(n.id) || {}).contents || '',
-                edges: edgeCells
-                    .filter(e => e.source == n.id)
-                    //.filter(e => nodeCells.find(_ => _.id == e.target).style == defaults.endStyle) //Clean up edges going to end node
-                    .map(e => ({
-                        id: e.id,
-                        title: e.value || null,
-                        contents: (getProcedureItem(e.id) || {}).contents || '',
-                        target: e.target,
-                    }))
-            }));
+        P.nodes = cells.filter(x => x._type === 'node').map(n => ({
+            id: n.id,
+            title: n.value || '',
+            start: cells.filter(x => x._type === 'edge' && x.source._type == 'start' && x.target == n).length > 0,
+            contents: (P.getItemById(n.id) || {}).contents || '',
+            edges: cells.filter(x => x._type === 'edge' && x.source == n && x.target._type === 'node').map(e => ({
+                id: e.id,
+                title: e.value || '',
+                contents: (P.getItemById(e.id) || {}).contents || '',
+                target: e.target.getId(),
+            }))
+        }));
     }
 
+    let updateProcedureOnGraphChange = true;
+
     graph.getModel().addListener(mxEvent.CHANGE, function () {
-        updateProcedureFromGraph();
+        if (updateProcedureOnGraphChange)
+            updateProcedureFromGraph();
     });
 
     function removeAllOverlays() {
-        var cells = getGraphCells(true);
-        cells.forEach(x => graph.removeCellOverlays(x));
+        graph.getChildCells().forEach(x => graph.removeCellOverlays(x));
     }
 
+    //On mouse move (for overlays)
     graph.addMouseListener({
         mouseMove: function (sender, me) {
             if (me && me.state && me.state.cell) {
@@ -427,27 +429,34 @@ window.onload = () => {
         dragLeave: function (evt, state) { }
     });
 
+    //On selection changed (for edit fields)
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sender, evt) {
-        var cells = graph.getSelectionCells();
-        var cell = cells[0];
+        Q('#itemTitle').style.display = Q('#itemDesc').style.display = 'none';
 
-        if (cells.length === 1 && cell && cellIsProcedureStep(cell)) {
-            Q('#itemTitle').style.display = '';
-            Q('#itemDesc').style.display = '';
+        if (graph.getSelectionCells().length !== 1) return;
+        let cell = graph.getSelectionCells()[0];
 
-            var item = getProcedureItem(cell.id) || {};
-            Q('textarea', '#itemTitle').value = item.title || '';
-            Q('[contentEditable]', '#itemDesc').innerHTML = item.contents || '';
+        if (cell._type === 'node') {
+            Q('#itemTitle').style.display = Q('#itemDesc').style.display = '';
+            let pItem = P.getItemById(cell.id) || {};
+            Q('textarea', '#itemTitle').value = pItem.title || '';
+            Q('[contentEditable]', '#itemDesc').innerHTML = pItem.contents || '';
         }
-        else {
-            Q('#itemTitle').style.display = 'none';
-            Q('#itemDesc').style.display = 'none';
+        else if (cell._type === 'edge') {
+            let sourceType = cell.source._type;
+            let targetType = cell.target._type;
+
+            if (sourceType === 'node' && targetType === 'node') {
+                Q('#itemTitle').style.display = '';
+                let pItem = P.getItemById(cell.id) || {};
+                Q('textarea', '#itemTitle').value = pItem.title || '';
+            }
         }
     });
 
     //Procedure text fields
     Q('textarea', '#procTitle').onkeyup = function (e) {
-        P.title = e.target.value;
+        P.title = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim();
     };
 
     Q('[contentEditable]', '#procDesc').onkeyup = function (e) {
@@ -456,10 +465,9 @@ window.onload = () => {
 
     //Node text fields
     Q('textarea', '#itemTitle').onkeyup = function (e) {
-        var newValue = graph.getSelectionCell().value = e.target.value;
-        graph.getModel().beginUpdate();
-
         try {
+            var newValue = graph.getSelectionCell().value = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim();
+            graph.getModel().beginUpdate();
             var cell = graph.getSelectionCell();
             var edit = new mxCellAttributeChange(cell, 'value', newValue);
             graph.getModel().execute(edit);
@@ -471,17 +479,27 @@ window.onload = () => {
 
     Q('[contentEditable]', '#itemDesc').onkeyup = function (e) {
         var cell = graph.getSelectionCell();
-        var item = getProcedureItem(cell.id);
+        var item = P.getItemById(cell.id);
         item.contents = e.target.innerHTML;
     };
 
     //Play
     Q('#play').onclick = async function () {
-        var layout = await fetch('/procedureplayer/layout1.html').then(r => r.text());
+        if (Q('#player').style.display == '') {
+            Q('#play').innerText = 'Play';
+            Q('#player').style.display = 'none';
+            Q('#properties').style.display = 'flex';
+            return;
+        }
+
+        var layout = await fetch('../procedureplayer/layout1.html').then(r => r.text());
         var procedure = JSON.parse(JSON.stringify(P)); //Deep copy
+        delete procedure.graph;
         var player = createProcedurePlayer(procedure, layout);
-        var popup = createPopup();
-        popup.appendChild(player);
-        Q('body').appendChild(popup);
+        Q('#player').innerHTML = '';
+        Q('#player').appendChild(player);
+        Q('#player').style.display = '';
+        Q('#properties').style.display = 'none';
+        Q('#play').innerText = 'Stop';
     };
 };

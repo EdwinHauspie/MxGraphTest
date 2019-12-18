@@ -22,12 +22,13 @@ function createProcedurePlayer(P, layout) {
     }
 
     //Clean up the procedure and create defaults
-    P.title = P.title || 'Untitled Procedure';
+    P.title = P.title || 'Untitled procedure';
     P.nodes = P.nodes || [];
     P.contents = P.contents || '';
     P.nodes.forEach(n => {
         n.contents = n.contents || '';
         n.title = (n.title || 'Untitled').trim();
+        n.edges = n.edges || [];
         n.edges.forEach(e => {
             e.title = (e.title || 'Next').trim();
             e.contents = e.contents || '';
@@ -35,12 +36,26 @@ function createProcedurePlayer(P, layout) {
         n.edges.sort(getSorter(e => e.title.toUpperCase()));
     });
 
-    //Check for unique entry node
-    if (P.nodes.filter(n => n.start).length !== 1) {
-        Q('h1').innerHTML = 'Error: No single point of entry.';
+    //Check for start node
+    let startNode = null;
+    let startNodes = P.nodes.filter(n => n.start);
+
+    if (startNodes.length === 1) startNode = startNodes[0];
+    else {
+        let allTargetedNodeIds = P.nodes.map(x => x.edges).reduce((agg, x) => agg.concat(x), []).map(x => x.target);
+        let allNonTargetedNodes = P.nodes.filter(x => !allTargetedNodeIds.includes(x.id));
+        if (allNonTargetedNodes.length === 1) startNode = allNonTargetedNodes[0];
+    }
+
+    if (!startNode) {
+        Q('h1').innerHTML = 'Error: Could not find start of procedure';
         return CONTAINER;
     }
-    let startNode = P.nodes.find(n => n.start);
+
+    //if (startNodes.length > 1) Q('h1').innerHTML = 'Error: Multiple start nodes.';
+    //if (startNodes.length < 1)
+    //if (startNodes.length !== 1) return CONTAINER;
+    //let startNode = startNodes[0];
 
     //Check for (endless) loop
     /*let loop = null;
@@ -74,7 +89,7 @@ function createProcedurePlayer(P, layout) {
         Q('.node').innerHTML = `<h3>${node.title}</h3> ${node.contents}`;
 
         let edgesHtml = node.edges.map(e => `<div class="edge"><button data-target="${e.target}">${e.title}</button><div>${e.contents}</div></div>`);
-        Q('.edges').innerHTML = edgesHtml.join('') || '<div class="edge"><button data-restart>Restart Procedure</button></div>';
+        Q('.edges').innerHTML = edgesHtml.join('') || '<div class="edge" style="text-align: right;display: block;"><button data-restart>Restart Procedure</button></div>';
     }
 
     function getConnectingEdge(sourceId, targetId) {

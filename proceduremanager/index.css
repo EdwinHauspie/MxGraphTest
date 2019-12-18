@@ -1,5 +1,5 @@
 body {
-    padding: 5px;
+    padding: 0;
     margin: 0;
     font-family: sans-serif;
     font-size: 14px;
@@ -46,7 +46,7 @@ body {
 pre { margin: 0; }
 
 /*https://codepen.io/AlanCollins/pen/EwDar*/
-button {display: inline-block;margin-bottom: 0;text-align: center;text-transform: uppercase;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;padding: 6px 12px;border-radius: 3px;border: 1px solid transparent;text-decoration: none;user-select: none;font-size: 14px;color: #eceff1;border-color: transparent;background: #78909c;box-shadow: none;margin: 2px 0;}
+button {display: inline-block;margin-bottom: 0;text-align: center;text-transform: uppercase;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;padding: 6px 12px;border: 1px solid transparent;text-decoration: none;user-select: none;font-size: 14px;color: #eceff1;border-color: transparent;background: #78909c;box-shadow: none;margin: 2px 0;}
 button:focus, button:active:focus { outline: thin dotted; outline: 5px auto -webkit-focus-ring-color; outline-offset: -2px; }
 button:hover, button:focus { text-decoration: none; color: #fff; border-color: transparent; color: #fff; background: #90a4ae; box-shadow: none; }
 button:active { outline: 0; background-image: none; border-color: #546e7a; color: #cfd8dc; background: #546e7a; box-shadow: none; }
@@ -73,12 +73,10 @@ textarea {
 
 input, [contentEditable], textarea {
     box-sizing: border-box;
-    border: 1px solid darkgrey;
     width: 100%;
     font-family: sans-serif;
     font-size: 14px;
     padding: 5px;
-    box-shadow: 3px 3px 0px #ccc;
     background: white;
 }
 
@@ -86,4 +84,10 @@ label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
+    color: white;
+}
+
+.draggables > * {
+    display:inline-block;cursor:move;background:#fff;margin-right:10px;box-sizing: border-box;
+    width: 40px;height: 40px;
 }
