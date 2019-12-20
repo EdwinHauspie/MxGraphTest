@@ -46,8 +46,9 @@ body {
 pre { margin: 0; }
 
 /*Overlays*/
-svg image { opacity: .075; transition: all .5s; }
-svg image:hover { opacity: 1 }
+svg image { opacity: .04; transition: all .5s; pointer-events: unset !important; cursor: pointer; }
+svg image + rect { display: none; }
+svg image:hover { opacity: .8 }
 
 /*https://codepen.io/AlanCollins/pen/EwDar*/
 button {display: inline-block;margin-bottom: 0;text-align: center;text-transform: uppercase;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;padding: 6px 12px;border: 1px solid transparent;text-decoration: none;user-select: none;font-size: 14px;color: #eceff1;border-color: transparent;background-color: #78909c;box-shadow: none;margin: 2px 0;}

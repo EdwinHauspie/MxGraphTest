@@ -73,13 +73,14 @@ window.onload = () => {
     //graph.setPanning(true); //Panning does not work together with rubberband selection (?)
     //graph.panningHandler.ignoreCell = true;
     mxRubberband.prototype.fadeOut = true;
-    //window.rubber = new mxRubberband(graph); //Enable multi mouse selection
+    //window.rubber = new mxRubberband(graph); //Enable multi mouse selection ... enabled by default (?)
     graph.setHtmlLabels(true);
     graph.setConnectable(true);
     graph.setAllowDanglingEdges(false);
-    graph.setCellsEditable(false); //Label editing is done with our custom properties pane
+    graph.setCellsEditable(false); //Label editing is done with our own custom properties pane
     graph.setTooltips(false);
     graph.setCellsCloneable(false); //Prevent cloning cells by dragging them while holding down <ctrl>
+    graph.setCellsDisconnectable(false); //Prevents dragging edges to other nodes (prevent double edges)
     mxEvent.disableContextMenu(container);
     mxGraphHandler.prototype.guidesEnabled = true;
     mxEdgeHandler.prototype.addEnabled = true;
@@ -431,12 +432,15 @@ window.onload = () => {
         if (updateProcedureOnGraphChange) updateProcedureFromGraph();
     });
 
-    //Prevent drawing double edges (only allow one connection, disregarding direction)
+    //Prevent drawing double or unwanted edges
     var origInsertEdgeHandler = mxConnectionHandler.prototype.insertEdge;
 
     mxConnectionHandler.prototype.insertEdge = function (parent, id, value, source, target, style) {
-        var existingEdge = graph.getChildCells().find(x => x._type == 'edge' && (x.source == source && x.target == target || x.source == target && x.target == source));
+        var allEdges = graph.getChildCells().filter(x => x._type == 'edge');
+        var existingEdge = allEdges.find(x => x.source == source && x.target == target || x.source == target && x.target == source);
         if (existingEdge) return alert('De cellen hebben al een verbinding.');
+        if (target._type == 'start' || source._type == 'end' || (source._type == 'start' && target._type == 'end')) return;
+        if (source._type == 'start' && allEdges.find(x => x.source == source)) return;
         return origInsertEdgeHandler.apply(this, arguments);
     };
 
