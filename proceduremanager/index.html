@@ -5,7 +5,7 @@
         window.mxBasePath = 'mxGraph';
     </script>
     <script src="mxGraph/mxClient.js"></script>
-    <script src="index.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="proceduremanager.js"></script>
     <script src="../procedureplayer/procedureplayer.js"></script>
     <link rel="stylesheet" type="text/css" href="index.css">
@@ -13,22 +13,20 @@
 
 <body>
     <div style="display:flex;height:100%;">
-        <div style="flex:4;overflow:scroll;">
-            <div id="graphContainer" tabindex="0"></div>
-        </div>
+        <div id="graphContainer" tabindex="0" style="flex:4;overflow:scroll;"></div>
 
-        <div style="position:absolute;left:20px;bottom:80px;" class="draggables">
+        <div style="position:fixed;left:20px;bottom:80px;" class="draggables">
             <span id="newNode" style="border-radius: 8px;border: 1px solid black;"></span>
             <span id="newGroup" style="border: 1px dotted #000;"></span>
             <span id="newStart" style="border-radius: 70px;border: 2px solid #66cc00;"></span>
             <span id="newEnd" style="border-radius: 70px;border: 2px solid #ff6666;"></span>
         </div>
 
-        <div style="position:absolute;left:20px;bottom:35px;">
+        <div style="position:fixed;left:20px;bottom:35px;">
             <button id="import">Import</button>
-            <button id="horizontal" style="margin-left:13px;">⇉</button>
-            <button id="vertical">⇊</button>
-            <button id="organic">↺</button>
+            <button id="horizontal" style="margin-left:13px;">Auto arrange</button>
+            <!--button id="vertical">Auto arrange</button>
+            <button id="organic">Auto arrange</button-->
             <button id="autoSize">Autosize</button>
             <button id="zoomOut" style="margin-left:13px;">-</button>
             <button id="zoomIn">+</button>
@@ -41,7 +39,7 @@
             <button id="play">Play</button>
         </div>
 
-        <div id="properties" style="background:#78909c;flex:1;padding:10px;display:flex;flex-direction:column;">
+        <div id="properties" style="background:#78909c;flex:2;padding:10px;display:flex;flex-direction:column;">
             <div class="form-row" id="procTitle">
                 <label>Procedure title</label>
                 <textarea rows="3"></textarea>
@@ -49,7 +47,20 @@
 
             <div class="form-row" id="procDesc" style="flex:1">
                 <label>Procedure description</label>
-                <div contenteditable></div>
+                <div class="wysiwyg">
+                    <div class="wysiwyg-toolbar">
+                        <button tabindex="-1" data-command="bold" title="Vet"></button>
+                        <button tabindex="-1" data-command="italic" title="Cursief"></button>
+                        <button tabindex="-1" data-command="underline" title="Onderlijnen"></button>
+                        <span class="wysiwyg-divider">|</span>
+                        <button tabindex="-1" data-command="justifyleft" title="Links uitlijnen"></button>
+                        <button tabindex="-1" data-command="justifycenter" title="Centreren"></button>
+                        <button tabindex="-1" data-command="justifyright" title="Rechts uitlijnen"></button>
+                        <span class="wysiwyg-divider">|</span>
+                        <button tabindex="-1" data-command="insertunorderedlist" title="Lijst"></button>
+                    </div>
+                    <div contenteditable></div>
+                </div>
             </div>
 
             <div class="form-row" id="itemTitle" style="display:none;">
@@ -59,7 +70,20 @@
 
             <div class="form-row" id="itemDesc" style="display:none;">
                 <label>Item description</label>
-                <div contenteditable></div>
+                <div class="wysiwyg">
+                    <div class="wysiwyg-toolbar">
+                        <button tabindex="-1" data-command="bold" title="Vet"></button>
+                        <button tabindex="-1" data-command="italic" title="Cursief"></button>
+                        <button tabindex="-1" data-command="underline" title="Onderlijnen"></button>
+                        <span class="wysiwyg-divider">|</span>
+                        <button tabindex="-1" data-command="justifyleft" title="Links uitlijnen"></button>
+                        <button tabindex="-1" data-command="justifycenter" title="Centreren"></button>
+                        <button tabindex="-1" data-command="justifyright" title="Rechts uitlijnen"></button>
+                        <span class="wysiwyg-divider">|</span>
+                        <button tabindex="-1" data-command="insertunorderedlist" title="Lijst"></button>
+                    </div>
+                    <div contenteditable></div>
+                </div>
             </div>
         </div id="player">
 

@@ -52,11 +52,6 @@ function createProcedurePlayer(P, layout) {
         return CONTAINER;
     }
 
-    //if (startNodes.length > 1) Q('h1').innerHTML = 'Error: Multiple start nodes.';
-    //if (startNodes.length < 1)
-    //if (startNodes.length !== 1) return CONTAINER;
-    //let startNode = startNodes[0];
-
     //Check for (endless) loop
     /*let loop = null;
 

@@ -1,3 +1,18 @@
+// todo: loop error detection
+// todo: groups verspringen bij auto arrange
+
+function Q(selector, ctx) {
+    return $(selector, ctx)[0];
+}
+
+function createPopup() {
+    var popup = Q('<div class="popup"></div>');
+    var close = Q('<span class="close">+</span>');
+    close.onclick = () => popup.parentNode.removeChild(popup);
+    popup.appendChild(close);
+    return popup;
+}
+
 window.onload = () => {
     let M = mxClient;
     if (!M.isBrowserSupported()) return alert('Browser not supported.');
@@ -22,8 +37,11 @@ window.onload = () => {
 
     //Nudge
     function nudge(coord, direction) {
-        graph.getSelectionCells().forEach(c => c.geometry[coord] += direction * graph.gridSize);
-        graph.refresh();
+        graph.getSelectionCells().forEach(c => {
+            var newGeo = c.geometry.clone();
+            newGeo[coord] += direction * graph.gridSize;
+            graph.getModel().setGeometry(c, newGeo)
+        });
         updateProcedureFromGraph();
     }
 
@@ -42,7 +60,7 @@ window.onload = () => {
         return allItems.find(x => x.id == id);
     };
 
-    Q('textarea', '#procTitle').value = P.title;
+    Q('#procTitle textarea').value = P.title;
 
     //Replace an event to keep the graph container focused (which is better in some particular cases)
     var origGraphFireMouseEvent = graph.fireMouseEvent;
@@ -52,8 +70,11 @@ window.onload = () => {
     };
 
     //Set default graph behaviour
+    //graph.setPanning(true); //Panning does not work together with rubberband selection (?)
+    //graph.panningHandler.ignoreCell = true;
+    mxRubberband.prototype.fadeOut = true;
+    //window.rubber = new mxRubberband(graph); //Enable multi mouse selection
     graph.setHtmlLabels(true);
-    graph.setPanning(true);
     graph.setConnectable(true);
     graph.setAllowDanglingEdges(false);
     graph.setCellsEditable(false); //Label editing is done with our custom properties pane
@@ -61,7 +82,6 @@ window.onload = () => {
     graph.setCellsCloneable(false); //Prevent cloning cells by dragging them while holding down <ctrl>
     mxEvent.disableContextMenu(container);
     mxGraphHandler.prototype.guidesEnabled = true;
-    new mxRubberband(graph); //Enable multi mouse selection
     mxEdgeHandler.prototype.addEnabled = true;
     mxEdgeHandler.prototype.removeEnabled = true;
 
@@ -132,7 +152,7 @@ window.onload = () => {
     Q('#xml').onclick = function () {
         var popup = createPopup();
         var xml = graphToXml(true);
-        var pre = createElement('pre')
+        var pre = Q('<pre />')
         pre.appendChild(document.createTextNode(xml));
         popup.appendChild(pre);
         Q('body').appendChild(popup);
@@ -141,7 +161,7 @@ window.onload = () => {
     Q('#json').onclick = function () {
         var popup = createPopup();
         var json = JSON.stringify(P, null, '    ');
-        var pre = createElement('pre');
+        var pre = Q('<pre />')
         pre.appendChild(document.createTextNode(json));
         popup.appendChild(pre);
         Q('body').appendChild(popup);
@@ -171,22 +191,23 @@ window.onload = () => {
                 graph.orderCells(true); //Send to background
                 cells[0].setConnectable(false);
             }
+            if (type == 'node') addOverlays(cells[0]);
         }
     };
 
-    var dragEl1 = createElement(`<div style="box-sizing:border-box;border:solid #000 1px;width:${defaults.nodeWidth}px;height:${defaults.nodeHeight}px;border-radius:10px;"></div>`);
+    var dragEl1 = Q(`<div style="box-sizing:border-box;border:solid #000 1px;width:${defaults.nodeWidth}px;height:${defaults.nodeHeight}px;border-radius:10px;"></div>`);
     var dragSource1 = mxUtils.makeDraggable(Q('#newNode'), () => graph, (graph, evt, target, x, y) => afterDrag('node', target, x, y), dragEl1, null, null, graph.autoscroll, true);
     dragSource1.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
-    var dragEl2 = createElement('<div style="box-sizing:border-box;border:solid #66CC00 2px;width:40px;height:40px;border-radius:40px;"></div>');
+    var dragEl2 = Q('<div style="box-sizing:border-box;border:solid #66CC00 2px;width:40px;height:40px;border-radius:40px;"></div>');
     var dragSource2 = mxUtils.makeDraggable(Q('#newStart'), () => graph, (graph, evt, target, x, y) => afterDrag('start', target, x, y), dragEl2, null, null, graph.autoscroll, true);
     dragSource2.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
-    var dragEl3 = createElement('<div style="box-sizing:border-box;border:solid #FF6666 2px;width:40px;height:40px;border-radius:40px;"></div>');
+    var dragEl3 = Q('<div style="box-sizing:border-box;border:solid #FF6666 2px;width:40px;height:40px;border-radius:40px;"></div>');
     var dragSource3 = mxUtils.makeDraggable(Q('#newEnd'), () => graph, (graph, evt, target, x, y) => afterDrag('end', target, x, y), dragEl3, null, null, graph.autoscroll, true);
     dragSource3.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
-    var dragEl4 = createElement(`<div style="box-sizing:border-box;border:1px dotted #000;width:${defaults.groupWidth}px;height:${defaults.groupHeight}px;"></div>`);
+    var dragEl4 = Q(`<div style="box-sizing:border-box;border:1px dotted #000;width:${defaults.groupWidth}px;height:${defaults.groupHeight}px;"></div>`);
     var dragSource4 = mxUtils.makeDraggable(Q('#newGroup'), () => graph, (graph, evt, target, x, y) => afterDrag('group', target, x, y), dragEl4, null, null, graph.autoscroll, true);
     dragSource4.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
 
@@ -199,6 +220,7 @@ window.onload = () => {
         overlay1.align = mxConstants.ALIGN_CENTER;
         overlay1.offset = new mxPoint(0, -13);
         overlay1.addListener(mxEvent.CLICK, mxUtils.bind(this, function (sender, evt) { addChild(graph, cell); }));
+        overlay1.addListener(mxEvent.MOUSE_MOVE, mxUtils.bind(this, function (sender, evt) { console.log(sender, evt); }));
         graph.addCellOverlay(cell, overlay1);
 
         var overlay2 = new mxCellOverlay(new mxImage(resourcePath + 'new_right.png', 16, 16), '');
@@ -230,7 +252,7 @@ window.onload = () => {
             }
 
             //Make sure there is no node at position x,y
-            function spn() {
+            function spc() {
                 return graph
                     .getChildCells()
                     .filter(x => x._type == 'node')
@@ -238,14 +260,15 @@ window.onload = () => {
                     .find(x => x.geometry.x == geometry.x && x.geometry.y == geometry.y);
             };
 
-            let samePositionNode = spn();
-            while (samePositionNode) {
-                geometry.x += 20;
-                geometry.y += 20;
-                samePositionNode = spn();
+            let samePositionCell = spc();
+            while (samePositionCell) {
+                if (horizontal) geometry.y += samePositionCell.geometry.height + 20;
+                else geometry.x += samePositionCell.geometry.width + 20;
+                samePositionCell = spc();
             }
 
             graph.insertEdge(parent, null, '', cell, newCell);
+            addOverlays(newCell);
         }
         finally {
             graph.getModel().endUpdate();
@@ -259,9 +282,9 @@ window.onload = () => {
         var bounds = graph.getGraphBounds();
 
         var svg = Q('svg');
-        var img = createElement('img');
-        var img2 = createElement('img');
-        var canvas = createElement(`<canvas width="${bounds.width}" height="${bounds.height}"></canvas>`);
+        var img = Q('<img/>');
+        var img2 = Q('<img/>');
+        var canvas = Q(`<canvas width="${bounds.width}" height="${bounds.height}"></canvas>`);
 
         img.onload = function () {
             canvas.getContext('2d').drawImage(img, -1 * bounds.x, -1 * bounds.y);
@@ -282,8 +305,8 @@ window.onload = () => {
         graph.removeCells();
 
         let p = await fetch('../procedures/boomkappen.json').then(r => r.json());
-        Q('textarea', '#procTitle').value = P.title = (p.title || '');
-        Q('[contentEditable]', '#procDesc').innerHTML = P.contents = (p.contents || '');
+        Q('#procTitle textarea').value = P.title = (p.title || '');
+        Q('#procDesc [contentEditable]').innerHTML = P.contents = (p.contents || '');
 
         if (p.graph) {
             let xDoc = mxUtils.parseXml(p.graph);
@@ -300,6 +323,7 @@ window.onload = () => {
                 //TODO revert cell ids to the imported ids, or not important ??
                 p.nodes.forEach(n => {
                     let c = graph.insertVertex(parent, null, n.title, 0, 0, defaults.nodeWidth, defaults.nodeHeight);
+                    addOverlays(c);
                     inserts[n.id] = c;
                 });
 
@@ -361,17 +385,17 @@ window.onload = () => {
     Q('#autoSize').onclick = () => autoSize();
 
     //Auto arrange
-    Q('#vertical').onclick = function () {
-        autoSize(true);
-        mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.STRAIGHT;
-        var layout = new mxHierarchicalLayout(graph);
-        layout.execute(graph.getDefaultParent());
-    };
-
     Q('#horizontal').onclick = function () {
         autoSize(true);
         mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.STRAIGHT;
         var layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
+        layout.execute(graph.getDefaultParent());
+    };
+
+    /*Q('#vertical').onclick = function () {
+        autoSize(true);
+        mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.STRAIGHT;
+        var layout = new mxHierarchicalLayout(graph);
         layout.execute(graph.getDefaultParent());
     };
 
@@ -380,9 +404,11 @@ window.onload = () => {
         var layout = new mxFastOrganicLayout(graph);
         layout.forceConstant = 120;
         layout.execute(graph.getDefaultParent());
-    };
+    };*/
 
-    //Graph events
+    //Main event and method to update our procedure object
+    let updateProcedureOnGraphChange = true;
+
     function updateProcedureFromGraph() {
         P.graph = graphToXml();
         let cells = graph.getChildCells();
@@ -396,27 +422,33 @@ window.onload = () => {
                 id: e.id,
                 title: e.value || '',
                 contents: (P.getItemById(e.id) || {}).contents || '',
-                target: e.target.getId(),
+                target: e.target.id,
             }))
         }));
     }
 
-    let updateProcedureOnGraphChange = true;
-
     graph.getModel().addListener(mxEvent.CHANGE, function () {
-        if (updateProcedureOnGraphChange)
-            updateProcedureFromGraph();
+        if (updateProcedureOnGraphChange) updateProcedureFromGraph();
     });
 
-    function removeAllOverlays() {
+    //Prevent drawing double edges (only allow one connection, disregarding direction)
+    var origInsertEdgeHandler = mxConnectionHandler.prototype.insertEdge;
+
+    mxConnectionHandler.prototype.insertEdge = function (parent, id, value, source, target, style) {
+        var existingEdge = graph.getChildCells().find(x => x._type == 'edge' && (x.source == source && x.target == target || x.source == target && x.target == source));
+        if (existingEdge) return alert('De cellen hebben al een verbinding.');
+        return origInsertEdgeHandler.apply(this, arguments);
+    };
+
+    //On mouse move (for overlays)
+    /*function removeAllOverlays() {
         graph.getChildCells().forEach(x => graph.removeCellOverlays(x));
     }
 
-    //On mouse move (for overlays)
     graph.addMouseListener({
         mouseMove: function (sender, me) {
             if (me && me.state && me.state.cell) {
-                if (me.state.cell.vertex && isEmpty(me.state.cell.overlays)) {
+                if (me.state.cell.vertex && (!me.state.cell.overlays || me.state.cell.overlays.length == 0)) {
                     removeAllOverlays();
                     addOverlays(me.state.cell);
                 }
@@ -427,7 +459,7 @@ window.onload = () => {
         mouseUp: function (sender, me) { },
         dragEnter: function (evt, state) { },
         dragLeave: function (evt, state) { }
-    });
+    });*/
 
     //On selection changed (for edit fields)
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sender, evt) {
@@ -439,8 +471,8 @@ window.onload = () => {
         if (cell._type === 'node') {
             Q('#itemTitle').style.display = Q('#itemDesc').style.display = '';
             let pItem = P.getItemById(cell.id) || {};
-            Q('textarea', '#itemTitle').value = pItem.title || '';
-            Q('[contentEditable]', '#itemDesc').innerHTML = pItem.contents || '';
+            Q('#itemTitle textarea').value = pItem.title || '';
+            Q('#itemDesc [contentEditable]').innerHTML = pItem.contents || '';
         }
         else if (cell._type === 'edge') {
             let sourceType = cell.source._type;
@@ -449,39 +481,10 @@ window.onload = () => {
             if (sourceType === 'node' && targetType === 'node') {
                 Q('#itemTitle').style.display = '';
                 let pItem = P.getItemById(cell.id) || {};
-                Q('textarea', '#itemTitle').value = pItem.title || '';
+                Q('#itemTitle textarea').value = pItem.title || '';
             }
         }
     });
-
-    //Procedure text fields
-    Q('textarea', '#procTitle').onkeyup = function (e) {
-        P.title = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim();
-    };
-
-    Q('[contentEditable]', '#procDesc').onkeyup = function (e) {
-        P.contents = e.target.innerHTML;
-    };
-
-    //Node text fields
-    Q('textarea', '#itemTitle').onkeyup = function (e) {
-        try {
-            var newValue = graph.getSelectionCell().value = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim();
-            graph.getModel().beginUpdate();
-            var cell = graph.getSelectionCell();
-            var edit = new mxCellAttributeChange(cell, 'value', newValue);
-            graph.getModel().execute(edit);
-        }
-        finally {
-            graph.getModel().endUpdate();
-        }
-    };
-
-    Q('[contentEditable]', '#itemDesc').onkeyup = function (e) {
-        var cell = graph.getSelectionCell();
-        var item = P.getItemById(cell.id);
-        item.contents = e.target.innerHTML;
-    };
 
     //Play
     Q('#play').onclick = async function () {
@@ -502,4 +505,56 @@ window.onload = () => {
         Q('#properties').style.display = 'none';
         Q('#play').innerText = 'Stop';
     };
+
+    //Procedure text fields
+    Q('#procTitle textarea').onkeyup = function (e) {
+        P.title = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim();
+    };
+
+    Q('#procDesc [contentEditable]').onkeyup = function (e) {
+        P.contents = e.target.innerHTML;
+    };
+
+    //Node text fields
+    Q('#itemTitle textarea').onkeyup = function (e) {
+        try {
+            var newValue = graph.getSelectionCell().value = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim();
+            graph.getModel().beginUpdate();
+            var cell = graph.getSelectionCell();
+            var edit = new mxCellAttributeChange(cell, 'value', newValue);
+            graph.getModel().execute(edit);
+        }
+        finally {
+            graph.getModel().endUpdate();
+        }
+    };
+
+    Q('#itemDesc [contentEditable]').onkeyup = function (e) {
+        var cell = graph.getSelectionCell();
+        var item = P.getItemById(cell.id);
+        item.contents = e.target.innerHTML;
+    };
+
+    //Rich text editors
+    function updateCommandIcons(wysiwyg) {
+        $('[data-command]', wysiwyg).toArray().forEach(x => {
+            let isActive = document.queryCommandState($(x).data('command'));
+            $(x).toggleClass('is-active', isActive);
+        });
+    }
+
+    $('.wysiwyg-toolbar').on('click', '[data-command]', e => {
+        let wysiwyg = e.target.closest('.wysiwyg');
+        $('[contentEditable]', wysiwyg).focus();
+        window.document.execCommand($(e.target).data('command'), false, null);
+        updateCommandIcons(wysiwyg);
+        $('[contentEditable]', wysiwyg).keyup(); //Triggers the update in our procedure object, todo clean up
+    });
+
+    $('[contentEditable]', '.wysiwyg').on('click keyup', e => updateCommandIcons(e.target.closest('.wysiwyg')));
+
+    $('[contentEditable]').on('dblclick', 'img', e => {
+        //testje
+        e.target.outerHTML = prompt('Edit image:', e.target.outerHTML) || e.target.outerHTML;
+    });
 };

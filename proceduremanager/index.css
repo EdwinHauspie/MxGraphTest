@@ -45,11 +45,15 @@ body {
 
 pre { margin: 0; }
 
+/*Overlays*/
+svg image { opacity: .075; transition: all .5s; }
+svg image:hover { opacity: 1 }
+
 /*https://codepen.io/AlanCollins/pen/EwDar*/
-button {display: inline-block;margin-bottom: 0;text-align: center;text-transform: uppercase;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;padding: 6px 12px;border: 1px solid transparent;text-decoration: none;user-select: none;font-size: 14px;color: #eceff1;border-color: transparent;background: #78909c;box-shadow: none;margin: 2px 0;}
+button {display: inline-block;margin-bottom: 0;text-align: center;text-transform: uppercase;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;padding: 6px 12px;border: 1px solid transparent;text-decoration: none;user-select: none;font-size: 14px;color: #eceff1;border-color: transparent;background-color: #78909c;box-shadow: none;margin: 2px 0;}
 button:focus, button:active:focus { outline: thin dotted; outline: 5px auto -webkit-focus-ring-color; outline-offset: -2px; }
-button:hover, button:focus { text-decoration: none; color: #fff; border-color: transparent; color: #fff; background: #90a4ae; box-shadow: none; }
-button:active { outline: 0; background-image: none; border-color: #546e7a; color: #cfd8dc; background: #546e7a; box-shadow: none; }
+button:hover, button:focus { text-decoration: none; color: #fff; border-color: transparent; background-color: #90a4ae; box-shadow: none; }
+button:active { outline: 0; background-image: none; border-color: #546e7a; color: #cfd8dc; background-color: #546e7a; box-shadow: none; }
 
 button.small {
     width: auto;
@@ -67,7 +71,8 @@ textarea {
 }
 
 [contentEditable] {
-    height: 150px;
+    min-height: 100px;
+    max-height: 200px;
     overflow: auto;
 }
 
@@ -90,4 +95,59 @@ label {
 .draggables > * {
     display:inline-block;cursor:move;background:#fff;margin-right:10px;box-sizing: border-box;
     width: 40px;height: 40px;
+}
+
+.wysiwyg-toolbar {
+    background: white;padding: 3px;
+}
+
+.wysiwyg [data-command] {
+    background: 0 0;
+    width: 24px;
+    height: 24px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    outline: 0;
+}
+
+.wysiwyg [data-command].hover, .wysiwyg [data-command].is-active {
+    border-color: #9b9b9b;
+}
+
+.wysiwyg [data-command=bold] {
+    background-image: url(https://www.kenniswest.be/images/editor/bold_icon.svg)
+}
+
+.wysiwyg [data-command=italic] {
+    background-image: url(https://www.kenniswest.be/images/editor/italic_icon.svg)
+}
+
+.wysiwyg [data-command=underline] {
+    background-image: url(https://www.kenniswest.be/images/editor/underline_icon.svg)
+}
+
+.wysiwyg [data-command=justifyleft] {
+    background-image: url(https://www.kenniswest.be/images/editor/align-left_icon.svg)
+}
+
+.wysiwyg [data-command=justifycenter] {
+    background-image: url(https://www.kenniswest.be/images/editor/align-center_icon.svg)
+}
+
+.wysiwyg [data-command=justifyright] {
+    background-image: url(https://www.kenniswest.be/images/editor/align-right_icon.svg)
+}
+
+.wysiwyg [data-command=insertunorderedlist] {
+    background-image: url(https://www.kenniswest.be/images/editor/list_icon.svg)
+}
+
+.wysiwyg-divider {
+    margin-right: 5px;
+    margin-left: 5px;
+    color: lightgrey;
 }
