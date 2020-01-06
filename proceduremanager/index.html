@@ -23,7 +23,8 @@
         </div>
 
         <div style="position:fixed;left:20px;bottom:35px;">
-            <button id="import">Import</button>
+            <label class="btn"><input id="open" type="file" />Open</label class="bu">
+            <button id="save">Save</button>
             <button id="horizontal" style="margin-left:13px;">Auto arrange</button>
             <!--button id="vertical">Auto arrange</button>
             <button id="organic">Auto arrange</button-->
@@ -34,19 +35,18 @@
             <button id="zoomReset">100%</button>
             <button id="delete" style="margin-left:13px;">Delete</button>
             <button id="xml" style="margin-left:13px;">Xml</button>
-            <button id="json">Json</button>
-            <button id="image" style="margin-left:13px;">Image</button>
+            <button id="image">Image</button>
             <button id="play">Play</button>
         </div>
 
         <div id="properties" style="background:#78909c;flex:2;padding:10px;display:flex;flex-direction:column;">
             <div class="form-row" id="procTitle">
-                <label>Procedure title</label>
+                <label class="lbl">Procedure title</label>
                 <textarea rows="3"></textarea>
             </div>
 
             <div class="form-row" id="procDesc" style="flex:1">
-                <label>Procedure description</label>
+                <label class="lbl">Procedure description</label class="lbl">
                 <div class="wysiwyg">
                     <div class="wysiwyg-toolbar">
                         <button tabindex="-1" data-command="bold" title="Vet"></button>
@@ -64,12 +64,12 @@
             </div>
 
             <div class="form-row" id="itemTitle" style="display:none;">
-                <label>Item title</label>
+                <label class="lbl">Item title</label class="lbl">
                 <textarea rows="3"></textarea>
             </div>
 
             <div class="form-row" id="itemDesc" style="display:none;">
-                <label>Item description</label>
+                <label class="lbl">Item description</label class="lbl">
                 <div class="wysiwyg">
                     <div class="wysiwyg-toolbar">
                         <button tabindex="-1" data-command="bold" title="Vet"></button>

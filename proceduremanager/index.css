@@ -51,21 +51,14 @@ svg image + rect { display: none; }
 svg image:hover { opacity: .8 }
 
 /*https://codepen.io/AlanCollins/pen/EwDar*/
-button {display: inline-block;margin-bottom: 0;text-align: center;text-transform: uppercase;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;padding: 6px 12px;border: 1px solid transparent;text-decoration: none;user-select: none;font-size: 14px;color: #eceff1;border-color: transparent;background-color: #78909c;box-shadow: none;margin: 2px 0;}
+button, .btn {display: inline-block;text-align: center;text-transform: uppercase;vertical-align: middle;cursor: pointer;background-image: none;white-space: nowrap;padding: 6px 12px;border: 1px solid transparent;text-decoration: none;user-select: none;font-size: 14px;color: #eceff1;border-color: transparent;background-color: #78909c;box-shadow: none;margin: 2px 0;}
 button:focus, button:active:focus { outline: thin dotted; outline: 5px auto -webkit-focus-ring-color; outline-offset: -2px; }
 button:hover, button:focus { text-decoration: none; color: #fff; border-color: transparent; background-color: #90a4ae; box-shadow: none; }
 button:active { outline: 0; background-image: none; border-color: #546e7a; color: #cfd8dc; background-color: #546e7a; box-shadow: none; }
 
-button.small {
-    width: auto;
-    font-weight: 600;
-    padding: 4px 6px;
-}
-
 .form-row+.form-row {
     margin-top: 20px;
 }
-
 
 textarea {
     resize: none;
@@ -77,6 +70,10 @@ textarea {
     overflow: auto;
 }
 
+input[type=file] {
+    width: 0; padding: 0; margin: 0; height: 0; position: fixed; left: -500px; top: -500px;
+}
+
 input, [contentEditable], textarea {
     box-sizing: border-box;
     width: 100%;
@@ -86,7 +83,7 @@ input, [contentEditable], textarea {
     background: white;
 }
 
-label {
+.lbl {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;

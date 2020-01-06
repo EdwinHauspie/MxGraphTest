@@ -159,13 +159,15 @@ window.onload = () => {
         Q('body').appendChild(popup);
     };
 
-    Q('#json').onclick = function () {
-        var popup = createPopup();
+    Q('#save').onclick = function () {
+        var element = document.createElement('a');
         var json = JSON.stringify(P, null, '    ');
-        var pre = Q('<pre />')
-        pre.appendChild(document.createTextNode(json));
-        popup.appendChild(pre);
-        Q('body').appendChild(popup);
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
+        element.setAttribute('download', P.title + '.json');
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
     };
 
     //Drag new elements
@@ -301,11 +303,22 @@ window.onload = () => {
     };
 
     //Import json
-    Q('#import').onclick = async function () {
+    function readFileAsync(file) {
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.onload = () => { resolve(reader.result); };
+            reader.onerror = reject;
+            reader.readAsText(file);
+        });
+    }
+
+    $('#open').on('change', async function (e) {
         graph.selectAll();
         graph.removeCells();
 
-        let p = await fetch('../procedures/boomkappen.json').then(r => r.json());
+        //let p = await fetch('../procedures/boomkappen.json').then(r => r.json());
+        let p = JSON.parse(await readFileAsync(e.target.files[0]));
+
         Q('#procTitle textarea').value = P.title = (p.title || '');
         Q('#procDesc [contentEditable]').innerHTML = P.contents = (p.contents || '');
 
@@ -344,7 +357,7 @@ window.onload = () => {
                 updateProcedureFromGraph();
             }
         }
-    };
+    });
 
     //Zoom
     Q('#zoomReset').onclick = () => graph.zoomActual();
