@@ -52,7 +52,7 @@ window.onload = () => {
 
     //For easy testing, following vars are in window scope (todo: remove from window scope)
     window.graph = editor.graph;
-    window.P = { title: 'Untitled procedure', contents: '', nodes: [], graph: '' };
+    window.P = { title: 'New procedure', contents: '', nodes: [], graph: '' };
 
     P.getItemById = function (id) {
         var allEdges = P.nodes.map(x => x.edges || []).reduce((arr, x) => arr = arr.concat(x), []);
@@ -326,6 +326,7 @@ window.onload = () => {
             let xDoc = mxUtils.parseXml(p.graph);
             let codec = new mxCodec(xDoc);
             codec.decode(xDoc.documentElement, graph.getModel());
+            graph.getChildCells().filter(x => x._type == 'node').forEach(addOverlays);
         } else {
             //This is the scenario where a procedure has never been in the visual manager, thus having no graph data
             try {
@@ -430,7 +431,7 @@ window.onload = () => {
         P.nodes = cells.filter(x => x._type === 'node').map(n => ({
             id: n.id,
             title: n.value || '',
-            start: cells.filter(x => x._type === 'edge' && x.source._type == 'start' && x.target == n).length > 0,
+            //start: cells.filter(x => x._type === 'edge' && x.source._type == 'start' && x.target == n).length > 0,
             contents: (P.getItemById(n.id) || {}).contents || '',
             edges: cells.filter(x => x._type === 'edge' && x.source == n && x.target._type === 'node').map(e => ({
                 id: e.id,
@@ -524,13 +525,8 @@ window.onload = () => {
     };
 
     //Procedure text fields
-    Q('#procTitle textarea').onkeyup = function (e) {
-        P.title = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim();
-    };
-
-    Q('#procDesc [contentEditable]').onkeyup = function (e) {
-        P.contents = e.target.innerHTML;
-    };
+    $('#procTitle textarea').on('blur', e => P.title = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim());
+    $('#procDesc [contentEditable]').on('blur', e => P.contents = e.target.innerHTML);
 
     //Node text fields
     Q('#itemTitle textarea').onkeyup = function (e) {
@@ -570,8 +566,7 @@ window.onload = () => {
 
     $('[contentEditable]', '.wysiwyg').on('click keyup', e => updateCommandIcons(e.target.closest('.wysiwyg')));
 
-    $('[contentEditable]').on('dblclick', 'img', e => {
-        //testje
+    /*$('[contentEditable]').on('dblclick', 'img', e => {
         e.target.outerHTML = prompt('Edit image:', e.target.outerHTML) || e.target.outerHTML;
-    });
+    });*/
 };

@@ -62,11 +62,12 @@ button:active { outline: 0; background-image: none; border-color: #546e7a; color
 
 textarea {
     resize: none;
+    height: 28px;
 }
 
 [contentEditable] {
-    min-height: 100px;
-    max-height: 200px;
+    min-height: 46px;
+    max-height: 144px;
     overflow: auto;
 }
 
@@ -81,6 +82,7 @@ input, [contentEditable], textarea {
     font-size: 14px;
     padding: 5px;
     background: white;
+    border: 0;
 }
 
 .lbl {
@@ -96,7 +98,8 @@ input, [contentEditable], textarea {
 }
 
 .wysiwyg-toolbar {
-    background: white;padding: 3px;
+    background: #eee;
+    padding: 3px;
 }
 
 .wysiwyg [data-command] {
@@ -140,7 +143,7 @@ input, [contentEditable], textarea {
     background-image: url(https://www.kenniswest.be/images/editor/align-right_icon.svg)
 }
 
-.wysiwyg [data-command=insertunorderedlist] {
+.wysiwyg [data-command=insertunorderedlist], .wysiwyg [data-command=insertorderedlist] {
     background-image: url(https://www.kenniswest.be/images/editor/list_icon.svg)
 }
 

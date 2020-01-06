@@ -22,7 +22,7 @@ function createProcedurePlayer(P, layout) {
     }
 
     //Clean up the procedure and create defaults
-    P.title = P.title || 'Untitled procedure';
+    P.title = P.title || 'New procedure';
     P.nodes = P.nodes || [];
     P.contents = P.contents || '';
     P.nodes.forEach(n => {
@@ -52,22 +52,32 @@ function createProcedurePlayer(P, layout) {
         return CONTAINER;
     }
 
-    //Check for (endless) loop
-    /*let loop = null;
+    //Loop detection - Every node must be able to get to an end node, meaning loops are valid as long as there is a way out
+    let endNodes = P.nodes.filter(x => !x.edges || x.edges.length === 0);
+    let notEndNodes = P.nodes.filter(x => x.edges && x.edges.length);
 
-    (function walk(node, path) {
-        path.push(node.id);
-        if (loop || path.length > 500) return (loop = path); //If path gets unrealistically long, we assume there is a endless loop
-        node.edges.map(e => P.nodes.find(n => n.id == e.target)).forEach(n => walk(n, path));
-    })(startNode, []);
+    function canReachEndNode(node) {
+        let endReached = false;
 
-    if (loop) {
-        var nodeIdCount = loop.reduce((agg, x) => { agg[x] = ((agg[x] || 0) + 1); return agg; }, {});
-        var mostSeenNode = Object.keys(nodeIdCount).map(x => ({ id: x, count: nodeIdCount[x] })).sort(getSorter(x => x.count, true))[0];
-        var node = P.nodes.find(x => x.id == mostSeenNode.id);
-        Q('h1').innerHTML = `Error: Loop detected. (${node.title})`;
+        function walk(n, path) {
+            if (path.includes(n.id)) return;
+            path.push(n.id);
+            let targetNodes = n.edges.map(e => P.nodes.find(n => n.id == e.target));
+            let goesToEndNode = !!targetNodes.find(x => endNodes.includes(x));
+            if (goesToEndNode) return (endReached = true);
+            targetNodes.forEach(x => walk(x, path));
+        }
+
+        walk(node, []);
+        return endReached;
+    }
+
+    let problem = notEndNodes.find(x => !canReachEndNode(x));
+
+    if (problem) {
+        Q('h1').innerHTML = `Error: Loop or invalid path (${problem.title})`;
         return CONTAINER;
-    }*/
+    }
 
     //Show intro
     Q('h1').innerHTML = P.title;

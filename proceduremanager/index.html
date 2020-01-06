@@ -26,10 +26,9 @@
             <label class="btn"><input id="open" type="file" />Open</label class="bu">
             <button id="save">Save</button>
             <button id="horizontal" style="margin-left:13px;">Auto arrange</button>
-            <!--button id="vertical">Auto arrange</button>
-            <button id="organic">Auto arrange</button-->
+            <!--button id="vertical">Auto arrange</button><button id="organic">Auto arrange</button-->
             <button id="autoSize">Autosize</button>
-            <button id="zoomOut" style="margin-left:13px;">-</button>
+            <button id="zoomOut" style="margin-left:13px;">&ndash;</button>
             <button id="zoomIn">+</button>
             <button id="zoomFit">Fit</button>
             <button id="zoomReset">100%</button>
@@ -42,7 +41,7 @@
         <div id="properties" style="background:#78909c;flex:2;padding:10px;display:flex;flex-direction:column;">
             <div class="form-row" id="procTitle">
                 <label class="lbl">Procedure title</label>
-                <textarea rows="3"></textarea>
+                <textarea></textarea>
             </div>
 
             <div class="form-row" id="procDesc" style="flex:1">
@@ -58,6 +57,7 @@
                         <button tabindex="-1" data-command="justifyright" title="Rechts uitlijnen"></button>
                         <span class="wysiwyg-divider">|</span>
                         <button tabindex="-1" data-command="insertunorderedlist" title="Lijst"></button>
+                        <button tabindex="-1" data-command="insertorderedlist" title="Genummerde lijst"></button>
                     </div>
                     <div contenteditable></div>
                 </div>
@@ -65,7 +65,7 @@
 
             <div class="form-row" id="itemTitle" style="display:none;">
                 <label class="lbl">Item title</label class="lbl">
-                <textarea rows="3"></textarea>
+                <textarea></textarea>
             </div>
 
             <div class="form-row" id="itemDesc" style="display:none;">
@@ -81,6 +81,7 @@
                         <button tabindex="-1" data-command="justifyright" title="Rechts uitlijnen"></button>
                         <span class="wysiwyg-divider">|</span>
                         <button tabindex="-1" data-command="insertunorderedlist" title="Lijst"></button>
+                        <button tabindex="-1" data-command="insertorderedlist" title="Genummerde lijst"></button>
                     </div>
                     <div contenteditable></div>
                 </div>
