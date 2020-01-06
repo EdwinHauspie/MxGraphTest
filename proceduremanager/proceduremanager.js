@@ -19,7 +19,7 @@ window.onload = () => {
 
     //Setup and styling of graph and editor
     var resourcePath = 'mxGraph/resources/';
-    var container = Q('#graphContainer');
+    var container = document.getElementById('graphContainer');
     var config = mxUtils.load(resourcePath + 'keyhandler-commons.xml').getDocumentElement();
     var editor = new mxEditor(config);
     editor.setGraphContainer(container);
@@ -33,34 +33,34 @@ window.onload = () => {
     }
 
     editor.addAction('customDelete', customDelete);
-    Q('#delete').onclick = function () { customDelete(); };
+    $('#delete').on('click', customDelete);
 
     //Nudge
     function nudge(coord, direction) {
         graph.getSelectionCells().forEach(c => {
             var newGeo = c.geometry.clone();
             newGeo[coord] += direction * graph.gridSize;
-            graph.getModel().setGeometry(c, newGeo)
+            graph.getModel().setGeometry(c, newGeo);
         });
         updateProcedureFromGraph();
     }
 
-    editor.addAction('nudgeLeft', function () { nudge('x', -1) });
-    editor.addAction('nudgeRight', function () { nudge('x', 1) });
-    editor.addAction('nudgeTop', function () { nudge('y', -1) });
-    editor.addAction('nudgeBottom', function () { nudge('y', 1) });
+    editor.addAction('nudgeLeft', () => nudge('x', -1));
+    editor.addAction('nudgeRight', () => nudge('x', 1));
+    editor.addAction('nudgeTop', () => nudge('y', -1));
+    editor.addAction('nudgeBottom', () => nudge('y', 1));
 
     //For easy testing, following vars are in window scope (todo: remove from window scope)
     window.graph = editor.graph;
     window.P = { title: 'New procedure', contents: '', nodes: [], graph: '' };
 
-    P.getItemById = function (id) {
+    function getProcedureItemById(id) {
         var allEdges = P.nodes.map(x => x.edges || []).reduce((arr, x) => arr = arr.concat(x), []);
         var allItems = P.nodes.concat(allEdges);
         return allItems.find(x => x.id == id);
-    };
+    }
 
-    Q('#procTitle textarea').value = P.title;
+    $('#procTitle textarea').val(P.title);
 
     //Replace an event to keep the graph container focused (which is better in some particular cases)
     var origGraphFireMouseEvent = graph.fireMouseEvent;
@@ -200,19 +200,19 @@ window.onload = () => {
 
     var dragEl1 = Q(`<div style="box-sizing:border-box;border:solid #000 1px;width:${defaults.nodeWidth}px;height:${defaults.nodeHeight}px;border-radius:10px;"></div>`);
     var dragSource1 = mxUtils.makeDraggable(Q('#newNode'), () => graph, (graph, evt, target, x, y) => afterDrag('node', target, x, y), dragEl1, null, null, graph.autoscroll, true);
-    dragSource1.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
+    dragSource1.isGuidesEnabled = () => graph.graphHandler.guidesEnabled;
 
     var dragEl2 = Q('<div style="box-sizing:border-box;border:solid #66CC00 2px;width:40px;height:40px;border-radius:40px;"></div>');
     var dragSource2 = mxUtils.makeDraggable(Q('#newStart'), () => graph, (graph, evt, target, x, y) => afterDrag('start', target, x, y), dragEl2, null, null, graph.autoscroll, true);
-    dragSource2.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
+    dragSource2.isGuidesEnabled = () => graph.graphHandler.guidesEnabled;
 
     var dragEl3 = Q('<div style="box-sizing:border-box;border:solid #FF6666 2px;width:40px;height:40px;border-radius:40px;"></div>');
     var dragSource3 = mxUtils.makeDraggable(Q('#newEnd'), () => graph, (graph, evt, target, x, y) => afterDrag('end', target, x, y), dragEl3, null, null, graph.autoscroll, true);
-    dragSource3.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
+    dragSource3.isGuidesEnabled = () => graph.graphHandler.guidesEnabled;
 
     var dragEl4 = Q(`<div style="box-sizing:border-box;border:1px dotted #000;width:${defaults.groupWidth}px;height:${defaults.groupHeight}px;"></div>`);
     var dragSource4 = mxUtils.makeDraggable(Q('#newGroup'), () => graph, (graph, evt, target, x, y) => afterDrag('group', target, x, y), dragEl4, null, null, graph.autoscroll, true);
-    dragSource4.isGuidesEnabled = function () { return graph.graphHandler.guidesEnabled; };
+    dragSource4.isGuidesEnabled = () => graph.graphHandler.guidesEnabled;
 
     //Overlays
     function addOverlays(cell) {
@@ -316,14 +316,12 @@ window.onload = () => {
         graph.selectAll();
         graph.removeCells();
 
-        //let p = await fetch('../procedures/boomkappen.json').then(r => r.json());
-        let p = JSON.parse(await readFileAsync(e.target.files[0]));
+        P = JSON.parse(await readFileAsync(e.target.files[0]));
+        $('#procTitle textarea').val(P.title || '');
+        $('#procDesc [contentEditable]').val(P.contents || '');
 
-        Q('#procTitle textarea').value = P.title = (p.title || '');
-        Q('#procDesc [contentEditable]').innerHTML = P.contents = (p.contents || '');
-
-        if (p.graph) {
-            let xDoc = mxUtils.parseXml(p.graph);
+        if (P.graph) {
+            let xDoc = mxUtils.parseXml(P.graph);
             let codec = new mxCodec(xDoc);
             codec.decode(xDoc.documentElement, graph.getModel());
             graph.getChildCells().filter(x => x._type == 'node').forEach(addOverlays);
@@ -336,13 +334,13 @@ window.onload = () => {
                 let inserts = {};
 
                 //TODO revert cell ids to the imported ids, or not important ??
-                p.nodes.forEach(n => {
+                P.nodes.forEach(n => {
                     let c = graph.insertVertex(parent, null, n.title, 0, 0, defaults.nodeWidth, defaults.nodeHeight);
                     addOverlays(c);
                     inserts[n.id] = c;
                 });
 
-                p.nodes.forEach(n => {
+                P.nodes.forEach(n => {
                     (n.edges || []).forEach(e => {
                         let c1 = inserts[n.id];
                         let c2 = inserts[e.target];
@@ -353,7 +351,7 @@ window.onload = () => {
             finally {
                 graph.getModel().endUpdate();
                 autoSize(true);
-                Q('#horizontal').click();
+                horizontalAutoArrange();
                 updateProcedureOnGraphChange = true;
                 updateProcedureFromGraph();
             }
@@ -397,15 +395,17 @@ window.onload = () => {
         }
     }
 
-    Q('#autoSize').onclick = () => autoSize();
+    $('#autoSize').on('click', () => autoSize());
 
     //Auto arrange
-    Q('#horizontal').onclick = function () {
+    function horizontalAutoArrange() {
         autoSize(true);
         mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.STRAIGHT;
         var layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
         layout.execute(graph.getDefaultParent());
-    };
+    }
+
+    $('#horizontal').on('click', () => horizontalAutoArrange());
 
     /*Q('#vertical').onclick = function () {
         autoSize(true);
@@ -421,22 +421,39 @@ window.onload = () => {
         layout.execute(graph.getDefaultParent());
     };*/
 
+    //History manager
+    /*window.backups = [];
+
+    $('#undo').on('click', () => {
+        if (backups.length) {
+            P = JSON.parse(backups.pop());
+            updateProcedureOnGraphChange = false;
+            let xDoc = mxUtils.parseXml(P.graph);
+            let codec = new mxCodec(xDoc);
+            codec.decode(xDoc.documentElement, graph.getModel());
+            graph.getChildCells().filter(x => x._type == 'node').forEach(addOverlays);
+            updateProcedureOnGraphChange = true;
+        }
+    });*/
+
     //Main event and method to update our procedure object
     let updateProcedureOnGraphChange = true;
 
     function updateProcedureFromGraph() {
+        //backups.push(JSON.stringify(P));
+
         P.graph = graphToXml();
         let cells = graph.getChildCells();
 
         P.nodes = cells.filter(x => x._type === 'node').map(n => ({
             id: n.id,
             title: n.value || '',
-            //start: cells.filter(x => x._type === 'edge' && x.source._type == 'start' && x.target == n).length > 0,
-            contents: (P.getItemById(n.id) || {}).contents || '',
+            start: cells.filter(x => x._type === 'edge' && x.source._type == 'start' && x.target == n).length > 0,
+            contents: (getProcedureItemById(n.id) || {}).contents || '',
             edges: cells.filter(x => x._type === 'edge' && x.source == n && x.target._type === 'node').map(e => ({
                 id: e.id,
                 title: e.value || '',
-                contents: (P.getItemById(e.id) || {}).contents || '',
+                contents: (getProcedureItemById(e.id) || {}).contents || '',
                 target: e.target.id,
             }))
         }));
@@ -481,35 +498,29 @@ window.onload = () => {
 
     //On selection changed (for edit fields)
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function (sender, evt) {
-        Q('#itemTitle').style.display = Q('#itemDesc').style.display = 'none';
+        $('#itemTitle, #itemDesc').hide();
 
         if (graph.getSelectionCells().length !== 1) return;
         let cell = graph.getSelectionCells()[0];
 
         if (cell._type === 'node') {
-            Q('#itemTitle').style.display = Q('#itemDesc').style.display = '';
-            let pItem = P.getItemById(cell.id) || {};
-            Q('#itemTitle textarea').value = pItem.title || '';
-            Q('#itemDesc [contentEditable]').innerHTML = pItem.contents || '';
+            $('#itemTitle, #itemDesc').show();
+            let pItem = getProcedureItemById(cell.id) || {};
+            $('#itemTitle textarea').val(pItem.title || '');
+            $('#itemDesc [contentEditable]').html(pItem.contents || '');
         }
-        else if (cell._type === 'edge') {
-            let sourceType = cell.source._type;
-            let targetType = cell.target._type;
-
-            if (sourceType === 'node' && targetType === 'node') {
-                Q('#itemTitle').style.display = '';
-                let pItem = P.getItemById(cell.id) || {};
-                Q('#itemTitle textarea').value = pItem.title || '';
-            }
+        else if (cell._type === 'edge' && cell.source._type === 'node' && cell.target._type === 'node') {
+            $('#itemTitle').show();
+            let pItem = getProcedureItemById(cell.id) || {};
+            $('#itemTitle textarea').val(pItem.title || '');
         }
     });
 
     //Play
-    Q('#play').onclick = async function () {
-        if (Q('#player').style.display == '') {
-            Q('#play').innerText = 'Play';
-            Q('#player').style.display = 'none';
-            Q('#properties').style.display = 'flex';
+    $('#play').on('click', async () => {
+        if ($('#player').is(':visible')) {
+            $('#player, #properties').toggle();
+            $('#play').text('Play');
             return;
         }
 
@@ -517,19 +528,17 @@ window.onload = () => {
         var procedure = JSON.parse(JSON.stringify(P)); //Deep copy
         delete procedure.graph;
         var player = createProcedurePlayer(procedure, layout);
-        Q('#player').innerHTML = '';
-        Q('#player').appendChild(player);
-        Q('#player').style.display = '';
-        Q('#properties').style.display = 'none';
-        Q('#play').innerText = 'Stop';
-    };
+        $('#player').empty().append(player);
+        $('#player, #properties').toggle();
+        $('#play').text('Stop');
+    });
 
     //Procedure text fields
     $('#procTitle textarea').on('blur', e => P.title = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim());
     $('#procDesc [contentEditable]').on('blur', e => P.contents = e.target.innerHTML);
 
     //Node text fields
-    Q('#itemTitle textarea').onkeyup = function (e) {
+    $('#itemTitle textarea').on('keyup', e => {
         try {
             var newValue = graph.getSelectionCell().value = e.target.value.replace(/(\r?\n|\r|\n)$/, '').trim();
             graph.getModel().beginUpdate();
@@ -540,13 +549,13 @@ window.onload = () => {
         finally {
             graph.getModel().endUpdate();
         }
-    };
+    });
 
-    Q('#itemDesc [contentEditable]').onkeyup = function (e) {
+    $('#itemDesc [contentEditable]').on('keyup', e => {
         var cell = graph.getSelectionCell();
-        var item = P.getItemById(cell.id);
+        var item = getProcedureItemById(cell.id);
         item.contents = e.target.innerHTML;
-    };
+    });
 
     //Rich text editors
     function updateCommandIcons(wysiwyg) {
