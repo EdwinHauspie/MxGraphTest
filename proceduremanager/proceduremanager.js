@@ -210,9 +210,9 @@ window.onload = () => {
     var dragSource3 = mxUtils.makeDraggable(Q('#newEnd'), () => graph, (graph, evt, target, x, y) => afterDrag('end', target, x, y), dragEl3, null, null, graph.autoscroll, true);
     dragSource3.isGuidesEnabled = () => graph.graphHandler.guidesEnabled;
 
-    var dragEl4 = Q(`<div style="box-sizing:border-box;border:1px dotted #000;width:${defaults.groupWidth}px;height:${defaults.groupHeight}px;"></div>`);
+    /*var dragEl4 = Q(`<div style="box-sizing:border-box;border:1px dotted #000;width:${defaults.groupWidth}px;height:${defaults.groupHeight}px;"></div>`);
     var dragSource4 = mxUtils.makeDraggable(Q('#newGroup'), () => graph, (graph, evt, target, x, y) => afterDrag('group', target, x, y), dragEl4, null, null, graph.autoscroll, true);
-    dragSource4.isGuidesEnabled = () => graph.graphHandler.guidesEnabled;
+    dragSource4.isGuidesEnabled = () => graph.graphHandler.guidesEnabled;*/
 
     //Overlays
     function addOverlays(cell) {
